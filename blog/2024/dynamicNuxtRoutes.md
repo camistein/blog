@@ -1,46 +1,43 @@
 ---
-title:Dynamic markdown routes with Nuxt
-description:All my blog routes are dynamically imported markdown files and created together with Nuxt and fdir. No CMS needed, just a folder with .md files in my repo.
-image:/imgs/og-cute-code-nuxt.png
-author:Camilla Nyberg
-category:Nuxt, Vue, TypeScript,Oktokit
+title: Dynamic routes with Nuxt
+description: Some of my blog routes are imported from another github repo.
+image: /imgs/og-cute-code-nuxt.png
+author: Camilla Nyberg
+category: Nuxt, Vue, TypeScript, Oktokit
 ---
 
-::HeroImage
 ![Hero - cute coder girl with Nuxt and Vue logo](/imgs/cute-code-nuxt.png)
-::
 
-# Dynamic routes with Vue, Nuxt & Markdown files
+# Dynamic Vue routes with Nuxt & Github
 
-::taglist{tags=['Nuxt','Vue','TypeScript', 'Oktokit']}
-::
+:::taglist{tags=['Nuxt','Vue','TypeScript', 'Oktokit']}
+:::
 
-You can extend Nuxt routing and discovering of pages with your own custom implementation.
+You can extend Nuxt routing and discovering of pages with your own custom implementation and even get pages from another Github repo completely
 
-::alert{type="information"}
-If you only was basic discovering and rendering of markdown files for a blog I recommend using [Nuxt Content](https://content.nuxt.com/). But I've used discovering of markdown files in this example just to show a simple implementation.
-::
+> [!NOTE]  
+> If you only was basic discovering and rendering of markdown files for a blog I recommend using [Nuxt Content](https://content.nuxt.com/).
 
 ## First of let's install dependencies
 
-- fdir
-  - npm `npm install fdir`
-  - yarn `yarn add fdir`
-- picomatch
-  - npm `npm install picomatch`
-  - yarn `yarn add picomatch`
+- oktokit
+  - npm `npm install oktokit`
+  - yarn `yarn add oktokit`
 - markdown-it (Optional: if you don't have another markdown render for vue)
 
-## 1. Dynamically import your .md files as routes
+## 1. Setup a content github repo
 
-First start of with creating a folder where you want to put your files.
+Create a public or private repository with the same structure as you want your routing to be.
+Mine has this structure: blog / 2024 / dynamicNuxtRoutes.md [See it here](https://github.com/camistein/blog/tree/main/blog/2024)
 
-I went with just naming my folder "blog" and a markdown file to your folder. I've added this file named
-**dynamicNuxtRoutes.md**
+Also setup a personal access token so we can include this when we get our files.
 
-_/blog/dynamicNuxtRoutes.md_
+## 2. Get the markdown files from Github
 
-Then we need to create a folder called **modules** (if you don't already have it ofc), and in that folder you can create the folder **blog-routes** and add a **index.ts**
+Now go back to your Nuxt site repository.
+
+We need to create a folder called **modules** (if you don't already have it ofc),
+and in that folder you can create the folder **blog-routes** and add a new file called **index.ts**
 
 _/modules/blog-routes/index.ts_
 
@@ -48,92 +45,215 @@ Add the following to your **index.ts**
 
 ```js
 import { defineNuxtModule, extendPages } from "@nuxt/kit";
-import type { ModuleOptions, NuxtPage } from "nuxt/schema";
+import type { ModuleOptions } from "nuxt/schema";
 
 export default defineNuxtModule <
   ModuleOptions >
   {
     setup(options, nuxt) {
-      extendPages((pages) => {
+      extendPages(async (pages) => {
         // This is where we'll put the rest of the code
       });
     },
   };
 ```
 
-### Find the files
+### Get the files from github
 
-Now let's start finding all our files.
+Now let's start getting our files from and creating routes!
 
-Add fdir and path to your imports
+Add Octokit to your imports
 
 ```js
-import { fdir } from "fdir";
-import * as path from "path";
+import { Octokit } from "octokit";
 ```
 
-Create a new instance of fdir and add your settings so we can search for our files and we only want \*.md files here.
+We need to do this in 2 steps if we want this to get the latest files in our repository.
+
+First of we need to get the latest **sha** key for our **main** branch in the repo we just created.
+
+Create a new instance of Octokit inside your extendPages and include your personal access token to make api calls to private and public github repos.
 
 ```js
-const crawler = new fdir()
-  .withDirs()
-  .normalize()
-  .withFullPaths()
-  .glob("./**/*.md")
-  .crawl(path.resolve(__dirname, "../../blog/"));
-const files = crawler.sync();
-```
+import { defineNuxtModule, extendPages } from "@nuxt/kit";
+import type { ModuleOptions } from "nuxt/schema";
+import { Octokit } from "octokit";
 
-Now we need to loop through our routes and create our routes. I've got a Nuxt page below pages/\_blog/. Note the underscore since I don't want Nuxt to handle this as a regular page.
-
-::alert{type="info"}
-Instead of discovering local markdown files you could add a fetch files from a private
-::
-
-```js
-const blogRoutes: NuxtPage[] = [];
-
-for (const file of files) {
-  const name = file.replace(/^.*[\\/]/, "").replace(".md", "");
-  const dashedName = name.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
-
-  blogRoutes.push({
-    path: `/blog/${dashedName}`,
-    name: `${name}`,
-    file: "@/pages/_blog/index.vue",
-    meta: {
-      path: name,
+export default defineNuxtModule <
+  ModuleOptions >
+  {
+    setup(options, nuxt) {
+      extendPages(async (pages) => {
+        const octokit = new Octokit({
+          auth: "_add_your_personal_access_token",
+        });
+      });
     },
-  });
+  };
+```
+
+Now continue with adding a call to get the latest sha value for your main branch. Replace all the github name and repo name parameters, mine are for example camistein and blog for owner and repo. This will get the latest sha so we can get the latest tree structure for our repository.
+
+> [!NOTE]  
+> Instead of discovering local markdown files you could add a fetch files from a private
+
+```js
+const branchResult = await octokit.request(
+  "GET /repos/{owner}/{repo}/branches/{branch}",
+  {
+    owner: "_replace_your_github_name_",
+    repo: "_replace_your_github_repo_",
+    branch: "main",
+    headers: {
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  }
+);
+```
+
+Now moving on we're actually going to get the tree structure of our repository. To do that we'll make a call to _git/tree_ path together with your sha value.
+This will give us the tree structur of our repository both including folders and files.
+
+```js
+if (branchResult && branchResult?.data?.commit?.sha) {
+  const treeResult = await octokit.request(
+    `GET /repos/{owner}/{repo}/git/trees/${branchResult.data.commit.sha}?recursive=3`,
+    {
+      owner: "_replace_your_github_name_",
+      repo: "_replace_your_github_repo_",
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    }
+  );
 }
 ```
 
-Note this line in the code with take the filename and create a slug out of it.
-For example:
-Your name is dynamicNuxtRoute.md
-then your path will be dynamic-nuxt-route
+After receiving the tree result we'll loop through all the values and only take blob files of type markdown (.md). Ive only done a simple check here, checking the **indexOf('.md')**
+since I know that my repository only contains folders and .md files but you can change that to properly check for each file extension.
 
 ```js
-const dashedName = name.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
+if (treeResult) {
+  if (treeResult.data.tree) {
+    for (const dataContent of treeResult.data.tree) {
+      if (
+        dataContent.type === "blob" &&
+        dataContent.path &&
+        dataContent.sha &&
+        dataContent.path.indexOf(".md") > -1
+      ) {
+        // lets do stuff with our files
+      }
+    }
+  }
+}
 ```
 
-We also add the file name to the meta data sent to our view so our view will now which markdown file to retrieve.
+Foreach file I'll get the path structure for example _/blog/2024_ as my rootPath in my path and then I'll convert the filename itself from camel case to a dashed slug.
+For example:
+Your name is dynamicNuxtRoutes.md
+then your slug will be dynamic-nuxt-routes
+
+I choose to do this so I didnt have to write filenames like exactly like the slug but instead use camel casing. You can of course do as you like.
+
+```js
+const rootPath = dataContent.path.substring(
+  0,
+  dataContent.path.lastIndexOf("/")
+);
+const file = dataContent.path.substring(dataContent.path.lastIndexOf("/") + 1);
+const name = file.replace(/^.*[\\/]/, "").replace(".md", "");
+const slug = name.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
+
+pages.push({
+  path: `/${rootPath}/${slug}`,
+  name: `${name}`,
+  file: "@/pages/_blog/index.vue",
+  meta: {
+    path: dataContent.path,
+    sha: dataContent.sha,
+  },
+});
+```
+
+We also add the file path to the meta data sent to our view so our view will now which markdown file to retrieve.
 
 ```js
 meta: {
-  path: name;
+  path: dataContent.path,
+  sha: dataContent.sha,
 }
 ```
 
-The last thing todo in this file is to add our new routes to the rest of our routes.
+Last but definitely important! Add your new route module to your nuxt.config and you should see your routes generated when you run npm run dev or similar dev site command.
 
 ```js
-pages.push(...blogRoutes);
+  modules: [
+    './src/modules/blog-routes',
+  ],
+```
+
+## 3. Setup and api path to retrieve github file as content
+
+We have a module that generates our routes, great! but we also need to get the content of your files to actually render them.
+
+Remember we added the actual path to the meta data of our route, we are going to use that.
+
+But we don't want to expose our personal access token so we're going to setup an api route.
+
+In your server folder or create a folder called _server_ in your root directory, create 2 folders, first one called **api** and then one called **github**
+
+so it should look like this: _/server/api/github/_
+
+In that folder create a file called content.ts (or .js if you use javascript).
+
+In that file we are going to use Octokit and defineEventHandler, getQuery from h3.
+
+The getQuery will recieve the path to the github file for each page.
+
+```js
+import { Octokit } from "octokit";
+import type { OctokitResponse } from "@octokit/types";
+import { defineEventHandler, getQuery } from "h3";
+
+export default defineEventHandler(async (event) => {
+  const { path } = getQuery(event);
+  return {
+    content: "",
+  };
+});
+```
+
+Now we can use Octokit to call the _contents_ endpoint instead and this will give us the actual content on the file but **base64** endcoded.
+We wont decode it quite yet since the encoding will make the response smaller.
+
+```js
+const octokit = new Octokit({
+  auth: "_add_your_personal_access_token",
+});
+
+const result: OctokitResponse<any> = await octokit.request(
+  "GET /repos/{owner}/{repo}/contents/{path}",
+  {
+    owner: "_replace_your_github_name_",
+    repo: "_replace_your_github_repo_",
+    path: path?.toString() ?? "",
+    headers: {
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  }
+);
+
+if (result?.data?.content) {
+  return {
+    content: result.data.content,
+  };
+}
 ```
 
 ## Lets configure our View!
 
-Now we need to implement our view to actually import the md file and render our markdown
+Now we need to implement our view to actually call our api to get the md file and render our markdown
 
 We'll start by adding the view that our route referenced: **@/pages/\_blog/index.vue**
 
@@ -143,23 +263,22 @@ I separated this into several components since I don't want one massive file.
 
 ```js
 <script setup lang="ts">
-import BlogContent from '@/components/blog/BlogContent.vue'
+import GithubContent from '@/components/blog/GithubContent.vue'
 </script>
 
 <template>
-      <BlogContent></BlogContent>
+      <GithubContent></GithubContent>
 </template>
 
 ```
 
-### BlogContent.vue
+### GithubContent.vue
 
 Now we can import our markdown content from the file.
-Our markdown file name was added to route metadata earlier in our route setup so we can use that here.
+Our markdown file path was added to route metadata earlier in our route setup so we can use that here together with the api endpoint we setup to
+get the file from github.
 
-We'll add an async await function to retrieve our markdown file **(await import(`@/blog/${route.meta.path}.md?raw`)).default**
-
-Make sure to add **?raw** to your path so you'll retrieve the raw content of your file.
+We'll add an useFetch call to retrieve our markdown file from our api: **const { data } = await useFetch('/api/github/content?path=' + route.meta.path)**
 
 You can now send your markdown string content into any vue component that can render markdown.
 I've created a Markdown.vue component that uses [markdown-it](https://github.com/markdown-it/markdown-it) to render my markdown content. You can then optionally add markdown-it plugins and css for custom rendering.
@@ -176,8 +295,10 @@ const markdownSource = ref<string>('')
 
 const loadMarkdown = async () => {
   try {
-    let markdownFileContent = (await import(`@/blog/${route.meta.path}.md?raw`)).default
-    markdownSource.value = markdownFileContent
+    const { data } = await useFetch('/api/github/content?path=' + route.meta.path)
+    if (data && data._rawValue?.content) {
+      markdownSource.value = atob(data._rawValue?.content)
+    }
   }
   catch(err:any) {
     console.error(err)
@@ -199,3 +320,5 @@ loadMarkdown()
 
 
 ```
+
+And that is how I imported blog markdown files from another github repo and added them dynamically to my Nuxt website.
