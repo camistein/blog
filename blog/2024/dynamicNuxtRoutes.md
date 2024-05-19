@@ -290,12 +290,26 @@ import '@/assets/css/blog.css'
 const route = useRoute()
 const markdownSource = ref<string>('')
 
+const transformData = (data?: string) => {
+  if (data && data['content']) {
+    let markdownFileContent = atob(data['content'])
+    return markdownFileContent
+  }
+
+  return data
+}
+
 const loadMarkdown = async () => {
   try {
-    const { data } = await useFetch('/api/github/content?path=' + route.meta.path)
-    if (data && data._rawValue?.content) {
-      markdownSource.value = atob(data._rawValue?.content)
-    }
+    const { data, pending, error, refresh } = await useFetch(
+      '/api/github/content?path=' + route.meta.path,
+      {
+        method: 'GET',
+        onResponse(context) {
+          markdownSource.value = transformData(context.response._data) ?? ''
+        }
+      }
+    )
   }
   catch(err:any) {
     console.error(err)
