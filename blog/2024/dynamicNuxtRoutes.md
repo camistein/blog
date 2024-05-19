@@ -3,7 +3,7 @@ title: Dynamic routes with Nuxt
 description: Some of my blog routes are imported from another github repo.
 image: https://raw.githubusercontent.com/camistein/blog/main/public/og-cute-code-nuxt.png?token=GHSAT0AAAAAACQS6MXK7SOT5H4NSO5HCLNWZSKJD7A
 author: Camilla Nyberg
-category: Nuxt, Vue, TypeScript, Oktokit
+categories: Nuxt, Vue, TypeScript, Oktokit
 ---
 
 ![Hero - cute coder girl with Nuxt and Vue logo](https://raw.githubusercontent.com/camistein/blog/main/public/cute-code-nuxt.png?token=GHSAT0AAAAAACQS6MXLEZJVTNB5VHC65PU6ZSKJEWA)
