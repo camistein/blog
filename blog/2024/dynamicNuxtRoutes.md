@@ -12,7 +12,7 @@ category:Nuxt, Vue, TypeScript
 
 # Dynamic routes with Vue, Nuxt & Markdown files
 
-::taglist{tags=['Nuxt','Vue','TypeScript']}
+::taglist{tags=['Nuxt','Vue','TypeScript', 'Oktokit']}
 ::
 
 You can extend Nuxt routing and discovering of pages with your own custom implementation.
