@@ -3,7 +3,7 @@ title:Dynamic markdown routes with Nuxt
 description:All my blog routes are dynamically imported markdown files and created together with Nuxt and fdir. No CMS needed, just a folder with .md files in my repo.
 image:/imgs/og-cute-code-nuxt.png
 author:Camilla Nyberg
-category:Nuxt, Vue, TypeScript
+category:Nuxt, Vue, TypeScript,Oktokit
 ---
 
 ::HeroImage
