@@ -5,7 +5,7 @@ image: https://i.ibb.co/hMJ4yzG/og-cute-code-nuxt.png
 author: Camilla Nyberg
 createdAt: 2024-05-18
 category: blog
-categories: Nuxt, Vue, TypeScript, Oktokit
+categories: Nuxt, Vue, TypeScript, Oktokit, Github
 ---
 
 ![Hero - cute coder girl with Nuxt and Vue logo](https://i.ibb.co/w4BzQWN/cute-code-nuxt.png)
