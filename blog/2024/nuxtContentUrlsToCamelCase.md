@@ -12,9 +12,6 @@ createdAt: 2024-05-20
 
 # Camel case to dashed slug with Nuxt Content
 
-::tag-list{:tags='["Nuxt","Vue","TypeScript","Nuxt Content"]'}
-::
-
 By default Nuxt content will generate url paths forced to lowercase but you have to write the dash your self but I will show you
 how you can tie into the built in hooks to turn your camel cased files into dashed slugs.
 
