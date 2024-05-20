@@ -5,6 +5,7 @@ image: https://i.ibb.co/FYt2LRb/og-camel.png
 author: Camilla Nyberg
 category: blog
 categories: Nuxt, Vue, TypeScript, Nuxt Content
+createdAt: 2024-05-20
 ---
 
 ![Camel](https://i.ibb.co/mC7P9pF/cute-camel.png)
