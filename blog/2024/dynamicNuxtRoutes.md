@@ -15,14 +15,14 @@ categories: Nuxt, Vue, TypeScript, Oktokit, Github
 You can extend Nuxt routing and discovering of pages with your own custom implementation and even get pages from another Github repo completely. My blog entry routes are markdown files in another repository.
 
 > [!NOTE]  
-> If you only was basic discovering and rendering of markdown files for a blog I recommend using [Nuxt Content](https://content.nuxt.com/).
+> If you only want basic discovering and rendering of markdown files in the same repo I recommend looking into [Nuxt Content](https://content.nuxt.com/).
 
 ## First of let's install dependencies
 
 - oktokit
   - npm `npm install oktokit`
   - yarn `yarn add oktokit`
-- markdown-it (Optional: if you don't have another markdown render for vue)
+- markdown-it (**Optional:** if you don't have another markdown render for vue)
 
 ## 1. Setup a content github repo
 
