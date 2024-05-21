@@ -1,6 +1,6 @@
 ---
 title: Dynamic routes with Nuxt
-description: Some of my blog routes are imported from another github repo.
+description: My blog routes are imported from another github repo.
 image: https://i.ibb.co/hMJ4yzG/og-cute-code-nuxt.png
 author: Camilla Nyberg
 createdAt: 2024-05-18
@@ -12,7 +12,7 @@ categories: Nuxt, Vue, TypeScript, Oktokit, Github
 
 # Dynamic Vue routes with Nuxt & Github
 
-You can extend Nuxt routing and discovering of pages with your own custom implementation and even get pages from another Github repo completely
+You can extend Nuxt routing and discovering of pages with your own custom implementation and even get pages from another Github repo completely. My blog entry routes are markdown files in another repository.
 
 > [!NOTE]  
 > If you only was basic discovering and rendering of markdown files for a blog I recommend using [Nuxt Content](https://content.nuxt.com/).
@@ -93,9 +93,6 @@ export default defineNuxtModule <
 
 Now continue with adding a call to get the latest sha value for your main branch. Replace all the github name and repo name parameters, mine are for example camistein and blog for owner and repo. This will get the latest sha so we can get the latest tree structure for our repository.
 
-> [!NOTE]  
-> Instead of discovering local markdown files you could add a fetch files from a private
-
 ```js
 const branchResult = await octokit.request(
   "GET /repos/{owner}/{repo}/branches/{branch}",
@@ -174,6 +171,11 @@ pages.push({
   },
 });
 ```
+
+> [!NOTE]
+> Here you can also retrieve the full content of your github file and input data such as title and description into the meta object. If you choose to retrieve the entire file from github you can then create another extendPages hook and send all page data into a search index, for example Algolia
+
+Moving on with our function!
 
 We also add the file path to the meta data sent to our view so our view will now which markdown file to retrieve.
 
@@ -335,3 +337,5 @@ loadMarkdown()
 ```
 
 And that is how I imported blog markdown files from another github repo and added them dynamically to my Nuxt website.
+
+Happy coding!
