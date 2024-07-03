@@ -5,7 +5,7 @@ image: https://i.ibb.co/ChX8C0R/AI-robot-Blog.png
 author: Camilla Nyberg
 category: blog
 categories: Sanity, React, Typescript, OpenAI
-createdAt: 2024-05-20
+createdAt: 2024-07-04
 ---
 
 ![AI robot](https://i.ibb.co/ChX8C0R/AI-robot-Blog.png)
