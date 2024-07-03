@@ -12,7 +12,9 @@ createdAt: 2024-07-04
 
 # Generate AI Images in image property
 
-Sometimes you might not have the energy or resources to create images, lets face it, not all of us are creative geniuses all the time and we just wnat to publish our content.
+Sometimes you might not have the energy or resources to create images.
+
+Lets face it, not all of us are creative geniuses all the time and we just want to gt on with publishing our content.
 In this post I will show you how to create an image property in Sanity with the option to generate & upload an AI Image instead.
 
 This is intended for Sanity CMS so I assume you'll already have some basic undestanding of Santiy
