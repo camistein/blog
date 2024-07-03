@@ -492,9 +492,9 @@ export const AIImageInput:  ComponentType<ObjectInputProps<ImageValue, ObjectSch
 
       const openai = new OpenAI({
         dangerouslyAllowBrowser: true,
-        organization: 'org-CkYSRVfqrcLNseVpec1YDnA1',
-        project: 'proj_5gqm8pijo0eLkqkWRAQLhP9e',
-        apiKey: process.env.OPENAI_API_KEY ?? 'sk-proj-vt2adpGokt5mpgcrtVF4T3BlbkFJ6FPX39OOPE6GVWLlUgOD',
+        organization: process.env.SANITY_OPENAI_ORGANIZATION_ID ?? "",
+        project: process.env.SANITY_OPENAI_PROJECT_ID ?? "",
+        apiKey: process.env.SANITY_OPENAI_API_KEY ?? "",
       });
 
       try {
