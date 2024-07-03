@@ -19,6 +19,8 @@ This is intended for Sanity CMS so I assume you'll already have some basic undes
 
 With this property you'll be able to upload an choose an image just like the basic image property in Sanity but editors can also choose to generate an Open AI image and use it.
 
+![Sanity generate AI Image](https://i.ibb.co/RCyVJHt/Generate-AIImage.png)
+
 ## 1. Create an Open AI account
 
 First set up your [Open AI account](https://platform.openai.com/settings). It's easy and you can signup with your basic Google Account
@@ -125,7 +127,7 @@ export const AIImageInput: ComponentType<
 ....
 ```
 
-## 6. Lets add functionality to generate AI Image
+## 6. Add functionality to generate AI Image
 
 ![Sanity generate AI Image](https://i.ibb.co/RCyVJHt/Generate-AIImage.png)
 
