@@ -10,7 +10,7 @@ createdAt: 2024-07-04
 
 ![AI robot](https://i.ibb.co/ChX8C0R/AI-robot-Blog.png)
 
-# Generate AI Images in image property
+# Generate AI Images in Sanity image property
 
 Sometimes you might not have the energy or resources to create images.
 
