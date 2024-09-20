@@ -14,18 +14,20 @@ createdAt: 2024-07-04
 
 Sometimes you might not have the energy or resources to create images.
 
-Lets face it, not all of us are creative geniuses all the time and we just want to gt on with publishing our content.
+And let's face it, not all of us are creative geniuses all the time and we just want to get on with publishing our content.
 In this post I will show you how to create an image property in Sanity with the option to generate & upload an AI Image instead.
 
-This is intended for Sanity CMS so I assume you'll already have some basic undestanding of Santiy
-
 With this property you'll be able to upload an choose an image just like the basic image property in Sanity but editors can also choose to generate an Open AI image and use it.
+
+> [!NOTE]
+>This is intended for [Sanity CMS](https://www.sanity.io/) so I will assume that you already have some basic experience and understanding of Sanity CMS, Documents and objects in this article. 
 
 ![Sanity generate AI Image](https://i.ibb.co/RCyVJHt/Generate-AIImage.png)
 
 ## 1. Create an Open AI account
 
-First set up your [Open AI account](https://platform.openai.com/settings). It's easy and you can signup with your basic Google Account
+First set up your [Open AI account](https://platform.openai.com/settings). 
+It's fast and easy and you can signup with your basic Google Account
 
 You'll need the following keys from your account:
 
@@ -33,13 +35,13 @@ You'll need the following keys from your account:
 - Organization ID
 - Api key
 
-Save this in a notepad or something for now.
+Save this in a notepad or similar for now.
 
 ![OpenAI](https://i.ibb.co/4pqQQWV/OpenAI.png)
 
 ## 2. Add fields to .env
 
-If you got .env files you should add the keys/ids to your environment files.
+If you got .env files, which I recommend you should add the keys/ids to your environment files. Just replace the "yourKey" with your values from OpenAI.
 
 ```
 SANITY_OPENAI_PROJECT_ID = yourKey
@@ -49,15 +51,19 @@ SANITY_OPENAI_API_KEY = yourKey
 
 ## 3. Install OpenAI Nuget
 
-Were going to use [OpenAI nuget package](https://www.npmjs.com/package/openai)
+Now we're going to use [OpenAI nuget package](https://www.npmjs.com/package/openai)
 
-so run `npm install openai` or `yarn add openai`
+so in your project root run following commands to install the OpenAI nuget package
+- `npm install openai` 
+- or `yarn add openai`
 
 ## 4. Create custom input component
 
-Create **AIImageIinput.tsx** in **/components/**
+Time to move on to coding! 
 
-This is the starting base for our image editor.
+Create a React component file in **/components/**, I named mine **AIImageInput.tsx**, this will be our custom image property editor. 
+
+This is the starting base for our image editor component.
 
 ```js
 import { ComponentType } from "react";
@@ -107,25 +113,25 @@ Feel free to add other icons if you're not using sanity/icons. React icons works
 
 ## 5. Add Client and Toast
 
-We are going to use toast and the Sanity client. So we can show feedback for errors or success messages to our editors and Sanity client to upload our AI Image to the CMS. '
+We are going to use toast and the Sanity client, so we can show feedback for errors or success messages to our editors and Sanity client to upload our AI Image to the CMS.
 
-Add these lines to the start of your component:
+Add these lines to the start of your component to use Sanity client and toast:
 
 ```js
 const client = useClient({ apiVersion: "v2022-06-30" });
 const toast = useToast();
 ```
 
-It will look like this
+It will look like this in the component
 
 ```js
 ...
 export const AIImageInput: ComponentType<
   ObjectInputProps<ImageValue, ObjectSchemaType>
 > = (props: ObjectInputProps<ImageValue>) => {
+
   const client = useClient({ apiVersion: "v2022-06-30" });
   const toast = useToast();
-
 ....
 ```
 
@@ -137,24 +143,28 @@ Now lets actually add functionality to generate our AI Image!
 
 ### First add state props
 
-State properties:
+First we need to add some state properties so we can handle data and images. 
+
+Add the following:
 
 ```js
-const [aIImage, setAIImage] = useState("");
-const [prompt, setPrompt] = useState("");
-const [loading, setLoading] = useState(false);
-const [saving, setSaving] = useState(false);
-const [fileName, setFileName] = useState("");
+const [aIImage, setAIImage] = useState(""); // the generated AI Image in base64 format
+const [prompt, setPrompt] = useState(""); // the text editor wants to generate image for
+const [loading, setLoading] = useState(false); // is the image being generated
+const [saving, setSaving] = useState(false); // are we trying to save & upload the image to CMS
+const [fileName, setFileName] = useState(""); // the filename for our generated AI image
 ```
 
-You can of course add these to a state object instead if you want, like such `const [state, setAIImage] = useState<AIImageInputState>({})`
+You can of course add these to a state object instead if you want, like such `const [state, setState] = useState<AIImageInputState>({})`
 
-Then render a text input and button to connect your view to inputs.
+Now we can move on to use our state and property values in our views and actually add a text input so editors can enter a text to generate images for.
+
+The **{props.renderDefault(props)}** will render the built in image selector for our image property so editors can pick an image uploaded in the CMS if they want. 
 
 ```js
 return (
   <div>
-    {props.renderDefault(props)}
+    {props.renderDefault(props)} 
     <Flex paddingY={3}>
       <TextInput
         placeholder="Describe image"
@@ -179,9 +189,9 @@ return (
 );
 ```
 
-Now you might notice the onClick call to `generateAiImage` nad be like, what the hell is that???
+Now you might notice the onClick call to `generateAiImage` and be like, what the hell is that???
 
-Well we'll create that next!
+Dont worry, we'll create that next!
 
 This is the function to call and generate an image with the help of Open AI. Notice the `process.env`, we'll use the environment variables added from Open AI settings here, and unless you want to create your own backend api endpoint you'll have to add the setting **dangerouslyAllowBrowser: true**.
 
@@ -247,7 +257,7 @@ const generateAiImage = useCallback(
 );
 ```
 
-To be able to render this image you can add an image tag to your React input component like such:
+To render this image you can add an image tag to your React input component like such:
 
 ```js
 <img
@@ -261,9 +271,13 @@ To be able to render this image you can add an image tag to your React input com
 
 ## 7. Save image
 
-We wont automatically upload every image to the CMS. Because let's face it not all AI images comes out perfect and we dont want to use up unnecessary space. So to begin with we only saved the image to our state, `const [aIImage, setAIImage] = useState('')`
+We wont automatically upload every image to the CMS. 
+Because let's face it not all AI images comes out perfect and we dont want to use up unnecessary space. 
+So to begin with we'll only saved the image to our state, `const [aIImage, setAIImage] = useState('')`,
+and await confirmation that the editor is happy with this image or wants to generate a new one. 
+To generate a new AI image all they need to do is press our generate button again. 
 
-Now what if the editor is happy with the image and want to use it!?
+Now what if the editor is happy with the image and want to use it?
 
 Then we'll need to upload it and set it to our property.
 
@@ -271,7 +285,7 @@ Let's get to it!
 
 ![Save generated AI Image](https://i.ibb.co/ChNZxjx/Generated-Image.png)
 
-First we'll have to take our base64 string and create a Block from it so we'll add this function:
+First we'll have to take our base64 string and create a Blob from it so we'll add this function:
 
 ```js
 const getAIBlob = useCallback(() => {
@@ -346,7 +360,8 @@ const saveImage = useCallback(
 );
 ```
 
-Now an editor might write the same promt/text multiple times but we want an unique filename so we'll some auto generated random text & numbers to the end of each filename with this function
+Now an editor might write or use the same prompt/text multiple times but we want an unique filename so we'll auto generate random text & numbers to the end of each filename with this function
+so each image filename will be unique. 
 
 ```js
 const generateGUID = useCallback(() => {
@@ -358,9 +373,7 @@ const generateGUID = useCallback(() => {
 }, []);
 ```
 
-We need to use the functions to actually make somethink happen so lets
-
-Add this to your return:
+We need to use our save function so editor can confirm they want to use the image. Add a save image button calling the saveImage function on click. 
 
 ```js
 {
@@ -447,7 +460,7 @@ so it will look like this in its complete form:
 
 ## 8. Create Sanity Field
 
-Now you can use your custom Sanity AI Image Input component for any image field.
+Now we can use your custom Sanity AI Image Input component for any image field.
 Here I've added it to a Sanity document
 
 ```js
