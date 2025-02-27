@@ -114,11 +114,24 @@ async function getFiles() {
     return files
 }
 
+function getConfig() {
+  const appIdIndex = process.argv.indexOf('-appId');
+  const appKeyIndex = process.argv.indexOf('-appKey');
+  const index = process.argv.indexOf('-index');
+
+  return {
+    index: process.argv[index + 1],
+    appId: process.argv[appIdIndex + 1],
+    appKey: process.argv[appKeyIndex + 1]
+  }
+}
+
 async function indexFiles() {         
     const records = await getFiles();
-    const indexName = 'camistein_dev'
+    const config = getConfig()
+    const indexName = config.index
     try {
-      const client = algolia.algoliasearch('S7HU7T67AV', 'f838c1e3df0aa871e242efe884786407')
+      const client = algolia.algoliasearch(config.appId, config.appKey)
       console.log(`Indexing records, num files found ${records?.length}`)
       records?.forEach((record) => {
         if (!record.objectID) {
