@@ -11,7 +11,7 @@ function convertToTimeStamp(value) {
     const date = new Date(value)
     const timestamp = date.getTime() / 1000
     return timestamp
-  }
+}
 
 function parseMetadata(data) {
     if (!data) {
@@ -64,7 +64,7 @@ function parseMetadata(data) {
     return meta
 }
 
-function getFileData(filename, rootPath, content) {
+function parseFileData(filename, rootPath, content) {
     const name = filename.replace(/^.*[\\/]/, '').replace('.md', '')
     const dashedName = name.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
 
@@ -105,7 +105,7 @@ async function getFiles() {
             if(file.isFile()) {
                 const fileContent = await fs.readFileSync(`${file.parentPath}/${file.name}`, 'utf8')
                 if(fileContent) {
-                    files.push(getFileData(file.name,`/blog/${yearFolder}`,fileContent))
+                    files.push(parseFileData(file.name,`/blog/${yearFolder}`,fileContent))
                 }
             }
         }
