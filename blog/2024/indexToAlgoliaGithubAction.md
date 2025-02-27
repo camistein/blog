@@ -289,7 +289,7 @@ Create a yml file in `.github/workflows`, dont forget the dot, name it what ever
 
 Start with a basic content, I've added the trigger on: push: branches for main branch to always trigger indexing when new content has been pushed to main branch.
 
-```yml
+```yaml
 name: Index files
 
 on:
@@ -325,7 +325,7 @@ jobs:
 
 Now lets add the step to use our `index.js` file together with our Github repository secrets.
 
-```yml
+```yaml
 - name: Index files
   run: node ./index.js -appId ${{ secrets.ALGOLIAAPPID }} -appKey ${{ secrets.ALGOLIAAPPKEY }} -index ${{ secrets.ALGOLIAINDEX }}
 ```
