@@ -77,7 +77,7 @@ We'll now fetch the file content and construct the `parseFileData` function to p
 
 We want to extract the meta section of the markdown and use this to index to Algolia, it looks like this:
 
-```
+```md
 ---
 title: Index content to Algolia in Github Action
 description: I will show you how you can index your markdown files into Algolia
@@ -87,7 +87,6 @@ category: blog
 categories: Algolia, Github,
 createdAt: 2025-02-27
 ---
-
 ```
 
 For that I've created this function to fetch all the different values in the meta section.
