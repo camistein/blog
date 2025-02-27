@@ -8,8 +8,6 @@ category: blog
 categories: Nuxt, Vue, TypeScript, Oktokit, Github
 ---
 
-![Hero - cute coder girl with Nuxt and Vue logo](https://i.ibb.co/w4BzQWN/cute-code-nuxt.png)
-
 # Dynamic Vue routes with Nuxt & Github
 
 You can extend Nuxt routing and discovering of pages with your own custom implementation and even get pages from another Github repo completely. My blog entry routes are markdown files in another repository.

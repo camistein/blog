@@ -8,8 +8,6 @@ categories: Nuxt, Vue, TypeScript, Nuxt Content
 createdAt: 2024-05-20
 ---
 
-![Camel](https://i.ibb.co/mC7P9pF/cute-camel.png)
-
 # Camel case to dashed slug with Nuxt Content
 
 By default Nuxt content will generate url paths forced to lowercase but you have to write the dash your self but I will show you
