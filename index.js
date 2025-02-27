@@ -100,10 +100,10 @@ async function getFiles() {
     const yearFolders = await fs.promises.readdir(folderPath, { recursive: false })
 
     for(const yearFolder of yearFolders) {
-        const directoryContent = await fs.promises.readdir(`${folderPath}\\${yearFolder}`, { recursive: true, withFileTypes: true });
+        const directoryContent = await fs.promises.readdir(`${folderPath}/${yearFolder}`, { recursive: true, withFileTypes: true });
         for(const file of directoryContent) {
             if(file.isFile()) {
-                const fileContent = await fs.readFileSync(`${file.parentPath}\\${file.name}`, 'utf8')
+                const fileContent = await fs.readFileSync(`${file.parentPath}/${file.name}`, 'utf8')
                 if(fileContent) {
                     files.push(getFileData(file.name,`/blog/${yearFolder}`,fileContent))
                 }
