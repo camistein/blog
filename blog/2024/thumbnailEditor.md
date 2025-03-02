@@ -12,6 +12,6 @@ createdAt: 2024-09-20
 
 I needed an easy way to generate thumbnails for Optimizely ContentTypes with icons so I created an editor where I can easily play around and then download image as a .png image.
 
-![Thumbnail Editor](https://i.ibb.co/3yhyp5Hc/Screenshot-2025-03-01-221729.png)
+![Thumbnail Editor](https://i.ibb.co/pjrYS8b6/Screenshot-2025-03-02-192201.png)
 
 [Check it out here](https://camistein.dev/generate-thumbnail/)
