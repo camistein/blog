@@ -11,7 +11,7 @@ createdAt: 2025-02-27
 # Index content to Algolia in Github Action
 
 In this article I'll show you how to index data from markdown files to an Algolia index.
-The markdown files are in a separate repository and used as blog articles on my [website](https//camistein.dev/blog/) and I use Algolia to enable filtering of my articles by facets.
+The markdown files are in a separate repository and used as blog articles on my [website](https://camistein.dev/blog/) and I use Algolia to enable filtering of my articles by facets.
 
 We'll create an `index.js` file to call during a Github Action that will fetch and parse all markdown files in [this repository](https://github.com/camistein/blog).
 
