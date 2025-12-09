@@ -8,7 +8,7 @@ categories: Postman,
 createdAt: 2025-12-10
 ---
 
-# Goodbye my friend
+# Goodbye my old friend
 
 Its been a good run. I dont know how many API request I've made and I will always
 remember that I created my first API Schema tests in Postman.
@@ -28,9 +28,16 @@ NOTE: I understand that companies need money and I wouldnt have had an issue wit
 
 ## Alternative
 
+### Bruno
+
 I work a lot in VSCode so I've found [Bruno](https://www.usebruno.com/) to be a good alternative for me since I can install the Bruno extension in VSCode. They also have a standalone client but the extension is right now good enough for me.
 
 They even have a Postman vs Bruno page on their website:
-https://www.usebruno.com/compare/bruno-vs-postman
+[Bruno vs Postman](https://www.usebruno.com/compare/bruno-vs-postman)
+
+And I got to admit, it makes me giggle a bit that the command to run tests are
+`bru run` . Everytime Im thinking `Bruh` in my head.
+
+## Goodbye
 
 Goodbye my friend and teacher, we've had a good few years and some part of me still hopes that you listen to your dev community and stop forcing us to login and store on cloud.
