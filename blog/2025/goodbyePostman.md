@@ -8,6 +8,8 @@ categories: Postman,
 createdAt: 2025-12-10
 ---
 
+![image](https://i.ibb.co/Tqps0dLY/goodbyepostman.png)
+
 # Goodbye my old friend
 
 Its been a good run. I dont know how many API request I've made and I will always
