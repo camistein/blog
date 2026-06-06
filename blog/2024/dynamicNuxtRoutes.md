@@ -15,11 +15,11 @@ You can extend Nuxt routing and discovering of pages with your own custom implem
 > [!NOTE]  
 > If you only want basic discovering and rendering of markdown files in the same repo I recommend looking into [Nuxt Content](https://content.nuxt.com/).
 
-## First of let's install dependencies
+## First off, let's install dependencies
 
-- oktokit
-  - npm `npm install oktokit`
-  - yarn `yarn add oktokit`
+- octokit
+  - npm `npm install octokit`
+  - yarn `yarn add octokit`
 - markdown-it (**Optional:** if you don't have another markdown render for vue)
 
 ## 1. Setup a content github repo
@@ -57,7 +57,7 @@ export default defineNuxtModule <
 
 ### Get the files from github
 
-Now let's start getting our files from and creating routes!
+Now let's start getting our files from Github and creating routes!
 
 Add Octokit to your imports
 
@@ -67,7 +67,7 @@ import { Octokit } from "octokit";
 
 We need to do this in 2 steps if we want this to get the latest files in our repository.
 
-First of we need to get the latest **sha** key for our **main** branch in the repo we just created.
+First off, we need to get the latest **sha** key for our **main** branch in the repo we just created.
 
 Create a new instance of Octokit inside your extendPages and include your personal access token to make api calls to private and public github repos.
 
@@ -106,7 +106,7 @@ const branchResult = await octokit.request(
 ```
 
 Now moving on we're actually going to get the tree structure of our repository. To do that we'll make a call to _git/tree_ path together with your sha value.
-This will give us the tree structur of our repository both including folders and files.
+This will give us the tree structure of our repository, including both folders and files.
 
 ```js
 if (branchResult && branchResult?.data?.commit?.sha) {
@@ -123,7 +123,7 @@ if (branchResult && branchResult?.data?.commit?.sha) {
 }
 ```
 
-After receiving the tree result we'll loop through all the values and only take blob files of type markdown (.md). Ive only done a simple check here, checking the **indexOf('.md')**
+After receiving the tree result we'll loop through all the values and only take blob files of type markdown (.md). I've only done a simple check here, checking the **indexOf('.md')**
 since I know that my repository only contains folders and .md files but you can change that to properly check for each file extension.
 
 ```js
@@ -148,7 +148,7 @@ For example:
 Your name is dynamicNuxtRoutes.md
 then your slug will be dynamic-nuxt-routes
 
-I choose to do this so I didnt have to write filenames like exactly like the slug but instead use camel casing. You can of course do as you like.
+I chose to do this so I didn't have to write filenames exactly like the slug but instead use camel casing. You can of course do as you like.
 
 ```js
 const rootPath = dataContent.path.substring(
@@ -175,7 +175,7 @@ pages.push({
 
 Moving on with our function!
 
-We also add the file path to the meta data sent to our view so our view will now which markdown file to retrieve.
+We also add the file path to the meta data sent to our view so our view will know which markdown file to retrieve.
 
 ```js
 meta: {
@@ -223,7 +223,7 @@ export default defineEventHandler(async (event) => {
 });
 ```
 
-Now we can use Octokit to call the _contents_ endpoint instead and this will give us the actual content on the file but **base64** endcoded.
+Now we can use Octokit to call the _contents_ endpoint instead and this will give us the actual content of the file but **base64** encoded.
 We wont decode it quite yet since the encoding will make the response smaller.
 
 ```js

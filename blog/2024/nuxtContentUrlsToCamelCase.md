@@ -10,7 +10,7 @@ createdAt: 2024-05-20
 
 # Camel case to dashed slug with Nuxt Content
 
-By default Nuxt content will generate url paths forced to lowercase but you have to write the dash your self but I will show you
+By default Nuxt content will generate url paths forced to lowercase but you have to write the dash yourself, but I will show you
 how you can tie into the built in hooks to turn your camel cased files into dashed slugs.
 
 **NOTE**
@@ -24,7 +24,7 @@ Create a folder called **plugins** in your server folder. If you don't have a se
 
 ## 2 Create function to turn camel case into dashed slug
 
-First in your lib folder create a file called something recognizeable and related to what it's suppose to be used for.
+First in your lib folder create a file called something recognizable and related to what it's supposed to be used for.
 
 For now I will just name it **camelCaseToDash.ts**
 
@@ -46,7 +46,7 @@ export interface IContentDocument extends Record<string, string> {
 }
 ```
 
-Then we'll add a function to recognize if a string actually is camel case, since we don't want to change path's for files that are already dashed or in another format than camel case.
+Then we'll add a function to recognize if a string actually is camel case, since we don't want to change paths for files that are already dashed or in another format than camel case.
 
 ```js
 const isCamelCase = (str: string) => {
@@ -54,7 +54,7 @@ const isCamelCase = (str: string) => {
 };
 ```
 
-Now we'll create a function that takes the id of the document, it will be the path structure + filename separated by colon's.
+Now we'll create a function that takes the id of the document, it will be the path structure + filename separated by colons.
 
 Example: 'blog:2024:nuxtContentCamelCase.md'
 
@@ -67,7 +67,7 @@ const slugName = document._id
   .replace(`.${document._extension}`, "");
 ```
 
-This will first separate and only take the last part of 'blog:2024:nuxtContentCamelCase.md', so that will we **nuxtContentCamelCase.md** and then we can replace the file extension with the **.replace(`.${document._extension}`, '')**
+This will first separate and only take the last part of 'blog:2024:nuxtContentCamelCase.md', so that will be **nuxtContentCamelCase.md** and then we can replace the file extension with the **.replace(`.${document._extension}`, '')**
 
 after that we'll use our **isCamelCase** function on that name to make sure that our filename is camel case.
 

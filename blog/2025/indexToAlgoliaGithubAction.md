@@ -4,7 +4,7 @@ description: I will show you how you can index your markdown files into Algolia
 image: https://i.ibb.co/WNCyJgRX/indexing.jpg
 author: Camilla Nyberg
 category: blog
-categories: Algolia, Github,
+categories: Algolia, Github
 createdAt: 2025-02-27
 ---
 
@@ -67,7 +67,7 @@ async function getFiles() {
 }
 ```
 
-But just having the file name doesnt do much for us, we want to index title, description, image and path for the actual file so we can display nice search items with Algolia.
+But just having the file name doesn't do much for us, we want to index title, description, image and path for the actual file so we can display nice search items with Algolia.
 
 ### Map file content to metadata
 
@@ -284,7 +284,7 @@ Add the following secrets to your Github repository secrets with the values from
 
 ### Create your Github Action workflow file
 
-Create a yml file in `.github/workflows`, dont forget the dot, name it what ever you want but I've named mine `index-files.yml`
+Create a yml file in `.github/workflows`, don't forget the dot, name it what ever you want but I've named mine `index-files.yml`
 
 Start with a basic content, I've added the trigger on: push: branches for main branch to always trigger indexing when new content has been pushed to main branch.
 

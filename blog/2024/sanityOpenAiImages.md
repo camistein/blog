@@ -1,6 +1,6 @@
 ---
 title: Sanity Open AI image property
-description: I will show you how you how to create an image property with the option to generate AI Images.
+description: I will show you how to create an image property with the option to generate AI Images.
 image: https://i.ibb.co/ChX8C0R/AI-robot-Blog.png
 author: Camilla Nyberg
 category: blog
@@ -15,7 +15,7 @@ Sometimes you might not have the energy or resources to create images.
 And let's face it, not all of us are creative geniuses all the time and we just want to get on with publishing our content.
 In this post I will show you how to create an image property in Sanity with the option to generate & upload an AI Image instead.
 
-With this property you'll be able to upload an choose an image just like the basic image property in Sanity but editors can also choose to generate an Open AI image and use it.
+With this property you'll be able to upload and choose an image just like the basic image property in Sanity, but editors can also choose to generate an OpenAI image and use it.
 
 > [!NOTE]
 > This is intended for [Sanity CMS](https://www.sanity.io/) so I will assume that you already have some basic experience and understanding of Sanity CMS, Documents and objects in this article.
@@ -39,32 +39,125 @@ Save this in a notepad or similar for now.
 
 ## 2. Add fields to .env
 
-If you got .env files, which I recommend you should add the keys/ids to your environment files. Just replace the "yourKey" with your values from OpenAI.
+If you have .env files, which I recommend, you should add the keys/ids to your environment files. Just replace the "yourKey" with your values from OpenAI.
+
+> [!IMPORTANT]
+> Sanity Studio environment variables must be prefixed with `SANITY_STUDIO_` to be accessible in the browser.
 
 ```
-SANITY_OPENAI_PROJECT_ID = yourKey
-SANITY_OPENAI_ORGANIZATION_ID = yourKey
-SANITY_OPENAI_API_KEY = yourKey
+SANITY_STUDIO_OPENAI_PROJECT = yourKey
+SANITY_STUDIO_OPENAI_ORGANIZATION = yourKey
+SANITY_STUDIO_OPENAI_API_KEY = yourKey
 ```
 
-## 3. Install OpenAI Nuget
+## 3. Install OpenAI package
 
-Now we're going to use [OpenAI nuget package](https://www.npmjs.com/package/openai)
+Now we're going to use the [OpenAI npm package](https://www.npmjs.com/package/openai)
 
-so in your project root run following commands to install the OpenAI nuget package
+So in your project root run one of the following commands to install it:
 
 - `npm install openai`
 - or `yarn add openai`
 
-## 4. Create custom input component
+## 4. Create the AIGeneratedImage class
 
-Time to move on to coding!
+We'll split the code into three files to keep things clean and easy to follow.
 
-Create a React component file in **/components/**, I named mine **AIImageInput.tsx**, this will be our custom image property editor.
+Start by creating **AIGeneratedImage.ts**. This class holds the image data returned from OpenAI and takes care of converting it to a `Blob` for uploading.
 
-This is the starting base for our image editor component.
+```ts
+class AIGeneratedImage {
+  readonly width: number;
+  readonly height: number;
+  readonly b64: string;
+  readonly name: string;
+  readonly fileName: string;
+  readonly fileNameWithGuid: string;
 
-```js
+  constructor(name: string, b64 = "", width = 1024, height = 1024) {
+    this.name = name;
+    this.b64 = b64;
+    this.width = width;
+    this.height = height;
+    this.fileName = name.replaceAll(" ", "_");
+    this.fileNameWithGuid = `${this.fileName}_${crypto.randomUUID()}`;
+  }
+
+  toBlob(): Blob {
+    const bytes = Uint8Array.from(atob(this.b64), (c) => c.charCodeAt(0));
+    return new Blob([bytes], { type: "image/png" });
+  }
+}
+
+export default AIGeneratedImage;
+```
+
+A few things worth noting here:
+
+- All properties are `readonly` since nothing should mutate the image data after it's created
+- `crypto.randomUUID()` generates a proper UUID for unique filenames — built into all modern browsers, no custom code needed
+- `toBlob()` converts the base64 string to a `Blob` in one line using `Uint8Array.from`
+
+## 5. Create the OpenAIGenerator class
+
+Next, create **OpenAIGenerator.ts**. This class wraps the OpenAI SDK and handles image generation.
+
+```ts
+import OpenAI from "openai";
+import AIGeneratedImage from "./AIGeneratedImage";
+
+class OpenAIGenerator {
+  private readonly openAI: OpenAI;
+
+  constructor(organization: string, project: string, apiKey: string) {
+    this.openAI = new OpenAI({
+      dangerouslyAllowBrowser: true,
+      organization,
+      project,
+      apiKey,
+    });
+  }
+
+  async generateImage(
+    prompt?: string,
+    format:
+      | "256x256"
+      | "512x512"
+      | "1024x1024"
+      | "1792x1024"
+      | "1024x1792" = "1024x1024",
+  ): Promise<AIGeneratedImage | undefined> {
+    try {
+      const response = await this.openAI.images.generate({
+        prompt: prompt ?? "",
+        n: 1,
+        size: format,
+        response_format: "b64_json",
+      });
+      const b64 = response.data?.[0]?.b64_json;
+      if (!b64) return undefined;
+      const [width, height] = format.split("x").map(Number);
+      return new AIGeneratedImage(prompt ?? "", b64, width, height);
+    } catch (err) {
+      console.error(err);
+      return undefined;
+    }
+  }
+}
+
+export default OpenAIGenerator;
+```
+
+> [!NOTE]
+> Unless you want to create your own backend API endpoint you'll need `dangerouslyAllowBrowser: true`. Your Sanity Studio will already be behind a login so this is fine.
+
+## 6. Create the custom input component
+
+Time to move on to the React component!
+
+Create **AIImageInput.tsx** in **/components/**. This is the starting base for our custom image property editor:
+
+```ts
 import { ComponentType } from "react";
 import { ImageValue, ObjectSchemaType, ObjectInputProps } from "sanity";
 
@@ -75,13 +168,13 @@ export const AIImageInput: ComponentType<
 };
 ```
 
-## 4. Imports
+## 7. Imports
 
-We are going to need some basic imports for Sanity UI components, Icons, Open AI, Sanity Client, set & unset (for setting value).
+We need imports for Sanity UI components, icons, the Sanity client, and our new helper classes.
 
 Add the following to the top of your input component:
 
-```js
+```ts
 import {
   TextInput,
   Button,
@@ -90,567 +183,485 @@ import {
   Text,
   Spinner,
   useToast,
-} from "@sanity/ui"; //this is for UI elements
+  Dialog,
+  Box,
+} from "@sanity/ui";
 import {
   GenerateIcon,
   RefreshIcon,
   UploadIcon,
   CloseIcon,
-} from "@sanity/icons"; //These are the icons we're going to use
-import { useCallback, useState, ComponentType } from "react"; // we'll need React to handle state
-import OpenAI from "openai"; // OpenAI of course !
+} from "@sanity/icons";
+import { useCallback, useState, ComponentType } from "react";
 import {
   useClient,
   ImageValue,
   ObjectSchemaType,
   ObjectInputProps,
-} from "sanity"; //Input types for typescript
-import { set, unset } from "sanity"; //So we can change the property value
+} from "sanity";
+import { set } from "sanity";
+import OpenAIGenerator from "./OpenAIGenerator";
+import AIGeneratedImage from "./AIGeneratedImage";
 ```
 
-Feel free to add other icons if you're not using sanity/icons. React icons works just as well.
+Notice that we no longer import `OpenAI` directly or `unset` from Sanity — the generator class handles the OpenAI SDK, and since uploading always succeeds or throws, we only ever need `set`.
 
-## 5. Add Client and Toast
+Feel free to swap the icons for React Icons or anything else you prefer.
 
-We are going to use toast and the Sanity client, so we can show feedback for errors or success messages to our editors and Sanity client to upload our AI Image to the CMS.
+## 8. Add Client and Toast
 
-Add these lines to the start of your component to use Sanity client and toast:
+Add these lines to the start of your component to get the Sanity client and toast notifications:
 
-```js
-const client = useClient({ apiVersion: "v2022-06-30" });
+```ts
+const client = useClient({ apiVersion: "2025-08-21" });
 const toast = useToast();
 ```
 
-It will look like this in the component
+> [!NOTE]
+> Always pass an `apiVersion` in `YYYY-MM-DD` format. Calling `useClient()` without one is deprecated.
 
-```js
-...
-export const AIImageInput: ComponentType<
-  ObjectInputProps<ImageValue, ObjectSchemaType>
-> = (props: ObjectInputProps<ImageValue>) => {
-
-  const client = useClient({ apiVersion: "v2022-06-30" });
-  const toast = useToast();
-....
-```
-
-## 6. Add functionality to generate AI Image
+## 9. Add state and generate functionality
 
 ![Sanity generate AI Image](https://i.ibb.co/RCyVJHt/Generate-AIImage.png)
 
-Now lets actually add functionality to generate our AI Image!
+### State
 
-### First add state props
+Instead of storing the raw base64 string and a separate filename, we now store the whole `AIGeneratedImage` object — it keeps everything in one place.
 
-First we need to add some state properties so we can handle data and images.
-
-Add the following:
-
-```js
-const [aIImage, setAIImage] = useState(""); // the generated AI Image in base64 format
-const [prompt, setPrompt] = useState(""); // the text editor wants to generate image for
-const [loading, setLoading] = useState(false); // is the image being generated
-const [saving, setSaving] = useState(false); // are we trying to save & upload the image to CMS
-const [fileName, setFileName] = useState(""); // the filename for our generated AI image
+```ts
+const [aIImage, setAIImage] = useState<AIGeneratedImage | undefined>();
+const [prompt, setPrompt] = useState("");
+const [loading, setLoading] = useState(false);
+const [saving, setSaving] = useState(false);
+const [open, setOpen] = useState(false);
 ```
 
-You can of course add these to a state object instead if you want, like such `const [state, setState] = useState<AIImageInputState>({})`
+### Generate function
 
-Now we can move on to use our state and property values in our views and actually add a text input so editors can enter a text to generate images for.
+The generate callback uses `async/await` and a `finally` block so `setLoading(false)` always runs, even if something throws:
 
-The **{props.renderDefault(props)}** will render the built in image selector for our image property so editors can pick an image uploaded in the CMS if they want.
+```ts
+const generateAiImage = useCallback(async () => {
+  setAIImage(undefined);
 
-```js
-return (
-  <div>
-    {props.renderDefault(props)}
-    <Flex paddingY={3}>
-      <TextInput
-        placeholder="Describe image"
-        value={prompt}
-        onChange={(event) => setPrompt(event.currentTarget.value)}
-      />
+  if (!prompt.trim()) {
+    toast.push({
+      status: "error",
+      title: "You have to enter a text to generate image",
+    });
+    return;
+  }
 
-      <Button
-        icon={aIImage ? RefreshIcon : GenerateIcon}
-        text={loading ? "Loading" : "Generate AI Image"}
-        disabled={loading || (!loading && !prompt)}
-        onClick={generateAiImage}
-      ></Button>
+  if (loading || !process.env.SANITY_STUDIO_OPENAI_API_KEY) return;
 
-      {loading && (
-        <Flex paddingX={4} justify="center" align="center">
-          <Spinner muted />
-        </Flex>
-      )}
-    </Flex>
-  </div>
-);
-```
-
-Now you might notice the onClick call to `generateAiImage` and be like, what the hell is that???
-
-Dont worry, we'll create that next!
-
-This is the function to call and generate an image with the help of Open AI. Notice the `process.env`, we'll use the environment variables added from Open AI settings here, and unless you want to create your own backend api endpoint you'll have to add the setting **dangerouslyAllowBrowser: true**.
-
-Usually I would say big NO NO to exposing API keys but your Sanity CMS will already be behing a basic auth login or perhaps even an custom SSO.
-
-This function will generate an Open AI Image from your text input describing the image. Note the format will come in base64.
-
-And we'll use toast to send feedback to our editor. So they'll know if they missed something or perhaps Open AI returned an error.
-
-```js
-const generateAiImage = useCallback(
-  async (event: any) => {
-    setAIImage("");
-
-    if (!loading && prompt && prompt.trim().length > 0) {
-      setLoading(true);
-
-      const openai = new OpenAI({
-        dangerouslyAllowBrowser: true,
-        organization: process.env.SANITY_OPENAI_ORGANIZATION_ID ?? "",
-        project: process.env.SANITY_OPENAI_PROJECT_ID ?? "",
-        apiKey: process.env.SANITY_OPENAI_API_KEY ?? "",
-      });
-
-      try {
-        setFileName(prompt.replaceAll(" ", "_"));
-        openai.images
-          .generate({
-            prompt: prompt ?? "",
-            n: 1,
-            size: "1024x1024",
-            response_format: "b64_json",
-          })
-          .then((response) => {
-            if (response.data) {
-              const image = response.data[0].b64_json;
-              setLoading(false);
-              setAIImage(image ?? "");
-              toast.push({
-                status: "success",
-                title: `Success!`,
-                description: `AI Image generated for ${prompt}`,
-              });
-            }
-          });
-      } catch (error) {
-        setLoading(false);
-        console.error(error);
-        toast.push({
-          status: "error",
-          title: `Error when generating AI image!`,
-          description: `${error}`,
-        });
-      }
-    } else if (!prompt || (prompt && prompt.trim().length == 0)) {
+  setLoading(true);
+  try {
+    const generator = new OpenAIGenerator(
+      process.env.SANITY_STUDIO_OPENAI_ORGANIZATION ?? "",
+      process.env.SANITY_STUDIO_OPENAI_PROJECT ?? "",
+      process.env.SANITY_STUDIO_OPENAI_API_KEY,
+    );
+    const image = await generator.generateImage(prompt, "1024x1024");
+    if (image) {
+      setAIImage(image);
       toast.push({
-        status: "error",
-        title: `You have to enter a text to generate image`,
+        status: "success",
+        title: "Success!",
+        description: `AI Image generated for ${prompt}`,
       });
     }
-  },
-  [prompt, loading, toast]
-);
+  } catch (error) {
+    console.error(error);
+    toast.push({
+      status: "error",
+      title: "Error when generating AI image!",
+      description: `${error}`,
+    });
+  } finally {
+    setLoading(false);
+  }
+}, [prompt, loading, toast]);
 ```
 
-To render this image you can add an image tag to your React input component like such:
+To display the generated image:
 
-```js
+```tsx
 <img
-  style={{ width: "124px", height: "124px" }}
-  src={`data:image/png;base64,${aIImage}`}
-  width={72}
-  height={72}
+  style={{ maxWidth: "350px", height: "auto", width: "100%" }}
+  src={`data:image/png;base64,${aIImage.b64}`}
+  width={aIImage.width}
+  height={aIImage.height}
   alt="AI generated"
 />
 ```
 
-## 7. Save image
-
-We wont automatically upload every image to the CMS.
-Because let's face it not all AI images comes out perfect and we dont want to use up unnecessary space.
-So to begin with we'll only saved the image to our state, `const [aIImage, setAIImage] = useState('')`,
-and await confirmation that the editor is happy with this image or wants to generate a new one.
-To generate a new AI image all they need to do is press our generate button again.
-
-Now what if the editor is happy with the image and want to use it?
-
-Then we'll need to upload it and set it to our property.
-
-Let's get to it!
+## 10. Save image
 
 ![Save generated AI Image](https://i.ibb.co/ChNZxjx/Generated-Image.png)
 
-First we'll have to take our base64 string and create a Blob from it so we'll add this function:
+We won't automatically upload every image — not all AI images come out perfect and we don't want to use up unnecessary space. The editor confirms they're happy before we upload.
 
-```js
-const getAIBlob = useCallback(() => {
-  const byteCharacters = atob(aIImage);
-  const byteNumbers = new Array(byteCharacters.length);
+Since `AIGeneratedImage` already handles the blob conversion and unique filename, the save function is much simpler now:
 
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
+```ts
+const saveImage = useCallback(async () => {
+  if (!aIImage) return;
+
+  setSaving(true);
+  setPrompt("");
+  try {
+    const blob = aIImage.toBlob();
+    const image = await client.assets.upload("image", blob, {
+      filename: aIImage.fileNameWithGuid,
+    });
+    setAIImage(undefined);
+    props.onChange(
+      set({
+        ...props.value,
+        asset: { _ref: image._id, _type: "reference" },
+      }),
+    );
+    setOpen(false);
+  } catch (err) {
+    toast.push({
+      status: "error",
+      title: "Error when saving AI image!",
+      description: `${err}`,
+    });
+  } finally {
+    setSaving(false);
   }
-
-  const byteArray = new Uint8Array(byteNumbers);
-  return new Blob([byteArray], { type: "image/png" });
-}, [aIImage]);
+}, [toast, client, aIImage, props]);
 ```
 
-Let's use this function to upload our blob to Sanity CMS.
-We will again use toast to send feedback to our editor, since feedback is good, no matter good or bad.
+We call `client.assets.upload` to upload the blob to Sanity CMS. You don't need to add dataset or any webhook API key — we are in the Sanity Studio context, so `useClient` handles all that. `props.onChange(set(...))` is what actually updates the image property value.
 
-We'll call `client.assets.upload` to actually upload the blob to the CMS. You don't need to add dataset or any webhook api key here. Remember we are in the sanity CMS context so all we added earlier was `const client = useClient({ apiVersion: "v2022-06-30" });`, Sanity will handle the rest.
+Add a clear function too, so editors can discard a generated image and start over:
 
-We will use the onChange, set and unSet values from props to change the actual image in the property:
-`props.onChange(image ? set(newValue) : unset())`
-
-Full code:
-
-```js
-const saveImage = useCallback(
-  async (event: any) => {
-    if (fileName) {
-      setSaving(true);
-      setPrompt("");
-
-      try {
-        const blob = getAIBlob();
-        const imageFileName = `${fileName}_${generateGUID()}`;
-        client.assets
-          .upload("image", blob, { filename: imageFileName })
-          .then((image) => {
-            setAIImage("");
-            try {
-              const newValue = {
-                ...props.value,
-                ...image,
-                asset: {
-                  _ref: image._id,
-                  _type: "reference",
-                },
-              };
-              props.onChange(image ? set(newValue) : unset());
-              setFileName("");
-            } catch (err) {
-              toast.push({
-                status: "error",
-                title: `Error when saving AI image!`,
-                description: `${err}`,
-              });
-            }
-            setSaving(false);
-          });
-      } catch (error) {
-        setSaving(false);
-        console.error(error);
-        toast.push({
-          status: "error",
-          title: `Error when generating AI image!`,
-          description: `${error}`,
-        });
-      }
-    }
-  },
-  [toast, client, fileName, getAIBlob, props, generateGUID]
-);
-```
-
-Now an editor might write or use the same prompt/text multiple times but we want an unique filename so we'll auto generate random text & numbers to the end of each filename with this function
-so each image filename will be unique.
-
-```js
-const generateGUID = useCallback(() => {
-  return "xxxxx-xxxx-yxxx".replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+```ts
+const clearAIImage = useCallback(() => {
+  setAIImage(undefined);
+  setPrompt("");
+  setLoading(false);
+  setSaving(false);
 }, []);
 ```
 
-We need to use our save function so editor can confirm they want to use the image. Add a save image button calling the saveImage function on click.
+## 11. Create Sanity Field
 
-```js
-{
-  aIImage && (
-    <Card radius={2} shadow={1}>
-      <Flex>
-        <div>
-          <img
-            style={{ width: "124px", height: "124px" }}
-            src={`data:image/png;base64,${aIImage}`}
-            width={72}
-            height={72}
-            alt="AI generated"
-          />
-        </div>
-        <div>
-          <Flex paddingLeft={4} direction={"column"}>
-            <Card paddingTop={4}>
-              <Text>
-                This image was generated from: {fileName.replaceAll("_", " ")}
-              </Text>
-            </Card>
-            <Card paddingTop={4}>
-              {fileName && (
-                <Button
-                  icon={UploadIcon}
-                  text={saving ? "Saving" : "Use this image"}
-                  disabled={saving}
-                  onClick={saveImage}
-                ></Button>
-              )}
-            </Card>
-          </Flex>
-        </div>
-        <div>
-          <Flex paddingLeft={4} justify={"flex-end"} align={"center"}>
-            <CloseIcon
-              style={{ fontSize: 37 }}
-              onClick={() => clearAIImage()}
-            />
-          </Flex>
-        </div>
-      </Flex>
-    </Card>
-  );
-}
-```
+Now you can use your custom Sanity AI Image Input component for any image field.
+Here I've added it to a Sanity document:
 
-so it will look like this in its complete form:
-
-```js
-  return  (<div>
-               {props.renderDefault(props)}
-               <Flex paddingY={3}>
-                <TextInput placeholder='Describe image' value={prompt} onChange={(event) =>setPrompt(event.currentTarget.value)}
-                } />
-                <Button icon={aIImage ? RefreshIcon : GenerateIcon} text={loading ? 'Loading' : 'Generate AI Image'} disabled={loading || (!loading && !prompt)} onClick={generateAiImage}></Button>
-                {loading && ( <Flex paddingX={4} justify="center" align="center"><Spinner muted /></Flex>)}
-                </Flex>
-                {aIImage && (<Card radius={2} shadow={1}>
-                  <Flex>
-                    <div>
-                    <img style={{width: '124px', height: '124px'}} src={`data:image/png;base64,${aIImage}`} width={72} height={72} alt="AI generated" />
-                    </div>
-                    <div>
-                      <Flex paddingLeft={4} direction={'column'}>
-                        <Card paddingTop={4}>
-                          <Text>This image was generated from: {fileName.replaceAll('_',' ')}</Text>
-                        </Card>
-                        <Card paddingTop={4}>
-                        {fileName && (<Button icon={UploadIcon} text={saving ? 'Saving' : 'Use this image'} disabled={saving} onClick={saveImage}></Button>)}
-                        </Card>
-                      </Flex>
-                    </div>
-                    <div>
-                        <Flex paddingLeft={4} justify={'flex-end'} align={'center'}>
-                          <CloseIcon style={{fontSize: 37}} onClick={() => clearAIImage()} />
-                        </Flex>
-                    </div>
-                  </Flex>
-                  </Card>)}
-</div>)}
-```
-
-## 8. Create Sanity Field
-
-Now we can use your custom Sanity AI Image Input component for any image field.
-Here I've added it to a Sanity document
-
-```js
-        defineField({
-            name: 'image',
-            title: 'Image',
-            components: {
-                input: AIImageInput
-              },
-            type: 'image'
-        }),
+```ts
+defineField({
+  name: "image",
+  title: "Image",
+  components: {
+    input: AIImageInput,
+  },
+  type: "image",
+}),
 ```
 
 ## Complete code
 
-In case I've forgotten to describe anything you can see the entirety of the code from my custom image input component below:
+### AIGeneratedImage.ts
 
-```js
-import { TextInput, Button, Flex, Card, Text, Spinner, useToast} from '@sanity/ui'
-import { GenerateIcon, RefreshIcon, UploadIcon, CloseIcon } from '@sanity/icons'
-import { useCallback, useState, ComponentType } from 'react'
-import OpenAI from 'openai'
-import { useClient, ImageValue, ObjectSchemaType,ObjectInputProps } from 'sanity'
-import {set, unset} from 'sanity'
+```ts
+class AIGeneratedImage {
+  readonly width: number;
+  readonly height: number;
+  readonly b64: string;
+  readonly name: string;
+  readonly fileName: string;
+  readonly fileNameWithGuid: string;
 
+  constructor(name: string, b64 = "", width = 1024, height = 1024) {
+    this.name = name;
+    this.b64 = b64;
+    this.width = width;
+    this.height = height;
+    this.fileName = name.replaceAll(" ", "_");
+    this.fileNameWithGuid = `${this.fileName}_${crypto.randomUUID()}`;
+  }
 
-export const AIImageInput:  ComponentType<ObjectInputProps<ImageValue, ObjectSchemaType>> = (props: ObjectInputProps<ImageValue>) => {
-  const [aIImage, setAIImage] = useState('')
-  const [prompt, setPrompt] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [fileName, setFileName] = useState('')
+  toBlob(): Blob {
+    const bytes = Uint8Array.from(atob(this.b64), (c) => c.charCodeAt(0));
+    return new Blob([bytes], { type: "image/png" });
+  }
+}
 
-  const client = useClient( { apiVersion: 'v2022-06-30'})
-  const toast = useToast()
+export default AIGeneratedImage;
+```
 
-  const generateAiImage = useCallback(async (event: any) => {
-    setAIImage('')
+### OpenAIGenerator.ts
 
-    if(!loading && prompt && prompt.trim().length > 0) {
-      setLoading(true)
+```ts
+import OpenAI from "openai";
+import AIGeneratedImage from "./AIGeneratedImage";
 
-      const openai = new OpenAI({
-        dangerouslyAllowBrowser: true,
-        organization: process.env.SANITY_OPENAI_ORGANIZATION_ID ?? "",
-        project: process.env.SANITY_OPENAI_PROJECT_ID ?? "",
-        apiKey: process.env.SANITY_OPENAI_API_KEY ?? "",
-      });
+class OpenAIGenerator {
+  private readonly openAI: OpenAI;
 
-      try {
-        setFileName(prompt.replaceAll(' ', '_'))
-        openai.images.generate({
-            prompt: prompt ?? '',
-            n: 1,
-            size: '1024x1024',
-            response_format: 'b64_json',
-        }).then((response) => {
-          if(response.data) {
-            const image = response.data[0].b64_json;
-            setLoading(false)
-            setAIImage(image ?? '')
-            toast.push({
-              status: 'success',
-              title: `Success!`,
-              description: `AI Image generated for ${prompt}`,
-            })
-          }
-        })
-    } catch (error) {
-        setLoading(false)
-        console.error(error);
-        toast.push({
-          status: 'error',
-          title: `Error when generating AI image!`,
-          description: `${error}`,
-        })
-    }
-    }
-    else if(!prompt || (prompt && prompt.trim().length == 0)) {
-      toast.push({
-        status: 'error',
-        title: `You have to enter a text to generate image`,
-      })
-    }
-  }, [prompt, loading, toast])
-
-  const generateGUID = useCallback(() => {
-    return 'xxxxx-xxxx-yxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0,
-    v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
+  constructor(organization: string, project: string, apiKey: string) {
+    this.openAI = new OpenAI({
+      dangerouslyAllowBrowser: true,
+      organization,
+      project,
+      apiKey,
     });
-  }, [])
+  }
 
-  const getAIBlob = useCallback( () => {
-      const byteCharacters = atob(aIImage);
-      const byteNumbers = new Array(byteCharacters.length);
+  async generateImage(
+    prompt?: string,
+    format:
+      | "256x256"
+      | "512x512"
+      | "1024x1024"
+      | "1792x1024"
+      | "1024x1792" = "1024x1024",
+  ): Promise<AIGeneratedImage | undefined> {
+    try {
+      const response = await this.openAI.images.generate({
+        prompt: prompt ?? "",
+        n: 1,
+        size: format,
+        response_format: "b64_json",
+      });
+      const b64 = response.data?.[0]?.b64_json;
+      if (!b64) return undefined;
+      const [width, height] = format.split("x").map(Number);
+      return new AIGeneratedImage(prompt ?? "", b64, width, height);
+    } catch (err) {
+      console.error(err);
+      return undefined;
+    }
+  }
+}
 
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
+export default OpenAIGenerator;
+```
 
-      const byteArray = new Uint8Array(byteNumbers);
-      return new Blob([byteArray], {type: 'image/png'});
-  }, [aIImage])
+### AIImageInput.tsx
 
-  const saveImage = useCallback(async (event: any) => {
-    if(fileName) {
-      setSaving(true)
-      setPrompt('')
+```tsx
+import {
+  TextInput,
+  Button,
+  Flex,
+  Card,
+  Text,
+  Spinner,
+  useToast,
+  Dialog,
+  Box,
+} from "@sanity/ui";
+import {
+  GenerateIcon,
+  RefreshIcon,
+  UploadIcon,
+  CloseIcon,
+} from "@sanity/icons";
+import { useCallback, useState, ComponentType } from "react";
+import {
+  useClient,
+  ImageValue,
+  ObjectSchemaType,
+  ObjectInputProps,
+} from "sanity";
+import { set } from "sanity";
+import OpenAIGenerator from "./OpenAIGenerator";
+import AIGeneratedImage from "./AIGeneratedImage";
 
-      try {
-        const blob = getAIBlob()
-        const imageFileName =  `${fileName}_${generateGUID()}`
-        client.assets.upload('image', blob, { filename: imageFileName }).then((image) => {
-          setAIImage('')
-          try {
-            const newValue = {
-              ...props.value,
-              ...image,
-              asset: {
-                _ref: image._id,
-                _type: 'reference'
-              }
-            }
-            props.onChange(image ? set(newValue) : unset())
-            setFileName('')
-        }
-          catch(err) {
-            toast.push({
-              status: 'error',
-              title: `Error when saving AI image!`,
-              description: `${err}`,
-            })
-          }
-          setSaving(false)
-        })
-      }
-      catch(error) {
-        setSaving(false)
-        console.error(error);
-        toast.push({
-          status: 'error',
-          title: `Error when generating AI image!`,
-          description: `${error}`,
-        })
-      }
+export const AIImageInput: ComponentType<
+  ObjectInputProps<ImageValue, ObjectSchemaType>
+> = (props: ObjectInputProps<ImageValue>) => {
+  const [aIImage, setAIImage] = useState<AIGeneratedImage | undefined>();
+  const [prompt, setPrompt] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const onClose = useCallback(() => setOpen(false), []);
+  const onOpen = useCallback(() => setOpen(true), []);
+
+  const client = useClient({ apiVersion: "2025-08-21" });
+  const toast = useToast();
+
+  const generateAiImage = useCallback(async () => {
+    setAIImage(undefined);
+
+    if (!prompt.trim()) {
+      toast.push({
+        status: "error",
+        title: "You have to enter a text to generate image",
+      });
+      return;
     }
 
-  },[toast, client, fileName, getAIBlob, props, generateGUID])
+    if (loading || !process.env.SANITY_STUDIO_OPENAI_API_KEY) return;
+
+    setLoading(true);
+    try {
+      const generator = new OpenAIGenerator(
+        process.env.SANITY_STUDIO_OPENAI_ORGANIZATION ?? "",
+        process.env.SANITY_STUDIO_OPENAI_PROJECT ?? "",
+        process.env.SANITY_STUDIO_OPENAI_API_KEY,
+      );
+      const image = await generator.generateImage(prompt, "1024x1024");
+      if (image) {
+        setAIImage(image);
+        toast.push({
+          status: "success",
+          title: "Success!",
+          description: `AI Image generated for ${prompt}`,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.push({
+        status: "error",
+        title: "Error when generating AI image!",
+        description: `${error}`,
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [prompt, loading, toast]);
+
+  const saveImage = useCallback(async () => {
+    if (!aIImage) return;
+
+    setSaving(true);
+    setPrompt("");
+    try {
+      const blob = aIImage.toBlob();
+      const image = await client.assets.upload("image", blob, {
+        filename: aIImage.fileNameWithGuid,
+      });
+      setAIImage(undefined);
+      props.onChange(
+        set({
+          ...props.value,
+          asset: { _ref: image._id, _type: "reference" },
+        }),
+      );
+      setOpen(false);
+    } catch (err) {
+      toast.push({
+        status: "error",
+        title: "Error when saving AI image!",
+        description: `${err}`,
+      });
+    } finally {
+      setSaving(false);
+    }
+  }, [toast, client, aIImage, props]);
 
   const clearAIImage = useCallback(() => {
-    setAIImage('')
-    setFileName('')
-    setPrompt('')
-    setLoading(false)
-    setSaving(false)
-  }, [])
+    setAIImage(undefined);
+    setPrompt("");
+    setLoading(false);
+    setSaving(false);
+  }, []);
 
-  return  (<div>
-               {props.renderDefault(props)}
-               <Flex paddingY={3}>
-                <TextInput placeholder='Describe image' value={prompt} onChange={(event) =>setPrompt(event.currentTarget.value)}
-                } />
-                <Button icon={aIImage ? RefreshIcon : GenerateIcon} text={loading ? 'Loading' : 'Generate AI Image'} disabled={loading || (!loading && !prompt)} onClick={generateAiImage}></Button>
-                {loading && ( <Flex paddingX={4} justify="center" align="center"><Spinner muted /></Flex>)}
+  return (
+    <div>
+      {props.renderDefault(props)}
+      <Flex paddingY={3}>
+        <Card style={{ textAlign: "center" }}>
+          <Button onClick={onOpen} text="Create AI Image" />
+        </Card>
+      </Flex>
+      {open && (
+        <Dialog
+          header="Generate AI Image"
+          id="generate-ai-image"
+          onClose={onClose}
+          zOffset={1000}
+          width={"auto"}
+        >
+          <Box padding={4}>
+            <Flex paddingY={3} direction={"column"} gap={4}>
+              <TextInput
+                placeholder="Describe image"
+                value={prompt}
+                onChange={(event) => {
+                  setPrompt(event.currentTarget.value);
+                  setAIImage(undefined);
+                }}
+              />
+              <div>
+                <Button
+                  icon={aIImage ? RefreshIcon : GenerateIcon}
+                  text={loading ? "Loading" : "Generate image"}
+                  disabled={loading || !prompt}
+                  onClick={generateAiImage}
+                  tone={!loading && !prompt ? "neutral" : "primary"}
+                />
+              </div>
+              {loading && (
+                <Flex paddingX={4} justify="center" align="center">
+                  <Spinner muted />
                 </Flex>
-                {aIImage && (<Card radius={2} shadow={1}>
-                  <Flex>
-                    <div>
-                    <img style={{width: '124px', height: '124px'}} src={`data:image/png;base64,${aIImage}`} width={72} height={72} alt="AI generated" />
-                    </div>
-                    <div>
-                      <Flex paddingLeft={4} direction={'column'}>
-                        <Card paddingTop={4}>
-                          <Text>This image was generated from: {fileName.replaceAll('_',' ')}</Text>
-                        </Card>
-                        <Card paddingTop={4}>
-                        {fileName && (<Button icon={UploadIcon} text={saving ? 'Saving' : 'Use this image'} disabled={saving} onClick={saveImage}></Button>)}
-                        </Card>
-                      </Flex>
-                    </div>
-                    <div>
-                        <Flex paddingLeft={4} justify={'flex-end'} align={'center'}>
-                          <CloseIcon style={{fontSize: 37}} onClick={() => clearAIImage()} />
+              )}
+            </Flex>
+            {aIImage && (
+              <Card radius={2} shadow={1} style={{ overflow: "hidden" }}>
+                <Flex padding={2}>
+                  <Flex direction={"column"} gap={2}>
+                    <img
+                      style={{
+                        maxWidth: "350px",
+                        height: "auto",
+                        width: "100%",
+                      }}
+                      src={`data:image/png;base64,${aIImage.b64}`}
+                      width={aIImage.width}
+                      height={aIImage.height}
+                      alt="AI generated"
+                    />
+                    <Flex direction={"column"}>
+                      <Card paddingTop={4}>
+                        <Flex gap={3} direction={"column"}>
+                          <Text>This image was generated for prompt:</Text>
+                          <Text>
+                            <i>{aIImage.name}</i>
+                          </Text>
                         </Flex>
-                    </div>
+                      </Card>
+                      <Card paddingTop={4}>
+                        <Flex gap={3} direction={"row"}>
+                          <Button
+                            icon={UploadIcon}
+                            text={saving ? "Saving" : "Use this image"}
+                            disabled={saving}
+                            style={{ cursor: "pointer" }}
+                            onClick={saveImage}
+                            tone={"positive"}
+                          />
+                          <Button
+                            icon={CloseIcon}
+                            text={"Remove"}
+                            style={{ cursor: "pointer" }}
+                            onClick={clearAIImage}
+                            tone={"caution"}
+                          />
+                        </Flex>
+                      </Card>
+                    </Flex>
                   </Flex>
-                  </Card>)}
-</div>)}
-
+                </Flex>
+              </Card>
+            )}
+          </Box>
+        </Dialog>
+      )}
+    </div>
+  );
+};
 ```
+
+[Github repo](https://github.com/camistein/ai-image-field)
 
 Happy Sanity coding!
