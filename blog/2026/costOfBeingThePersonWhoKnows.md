@@ -67,7 +67,7 @@ In reality, on-call compensation is often based on what happened rather than wha
 
 The incident is easy to measure. The responsibility isn't.
 
-## The Bug Bounty Question
+## The Bug Bounty
 
 I've had similar thoughts when discovering bugs or security issues.
 
@@ -115,7 +115,7 @@ That at least acknowledges something important:
 
 Finding vulnerabilities, reproducing them, and writing useful reports is work.
 
-## The Carpenter Problem
+## The Carpenter
 
 I sometimes wonder if this happens because technical work is largely invisible.
 
