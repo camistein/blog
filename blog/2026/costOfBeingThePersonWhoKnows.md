@@ -10,12 +10,8 @@ image: https://i.ibb.co/m5WcPsx1/it-vs-carpenter.png
 # The Cost of Being the Person Who Knows
 
 :::preamble
-I've worked in IT for a long time now.
+I've worked in IT for a long time now. Long enough to notice a pattern. The more knowledge you have, the more responsibility seems to find its way to you.
 :::
-
-Long enough to notice a pattern.
-
-The more knowledge you have, the more responsibility seems to find its way to you.
 
 Sometimes that's part of the job.
 
@@ -23,9 +19,7 @@ Sometimes it isn't.
 
 But the expectation often feels the same.
 
-You know how to solve the problem.
-
-Therefore you should.
+You know how to solve the problem. Therefore you should.
 
 ## The Person Everyone Calls
 
@@ -39,11 +33,7 @@ The person who remembers why a decision was made three years ago.
 
 The person everyone calls when something breaks.
 
-I've been that person more than once.
-
-And while there's value in being trusted, there's also a cost that often goes unnoticed.
-
-Responsibility tends to stick to people who are capable.
+I've been that person more than once. And while there's value in being trusted, there's also a cost that often goes unnoticed.Responsibility tends to stick to people who are capable.
 
 The more you know, the more likely you are to become the fallback plan.
 
@@ -57,13 +47,13 @@ A manager might look at a report and see that you only handled one incident all 
 
 An engineer often sees a weekend that wasn't really theirs.
 
-You need to be reachable.
+- You need to be reachable.
 
-You need your laptop nearby.
+- You need your laptop nearby.
 
-You need internet access.
+- You need internet access.
 
-You need to be ready.
+- You need to be ready.
 
 Maybe the phone never rings.
 
@@ -71,15 +61,11 @@ But your availability was still spoken for.
 
 The company isn't just paying for the incident.
 
-It's paying for the responsibility.
-
-Or at least that's the idea.
+It's paying for the responsibility.Or at least that's the idea.
 
 In reality, on-call compensation is often based on what happened rather than what could have happened.
 
-The incident is easy to measure.
-
-The responsibility isn't.
+The incident is easy to measure. The responsibility isn't.
 
 ## The Bug Bounty Question
 
@@ -93,7 +79,7 @@ That's my choice.
 
 But I've always found it interesting that there is often an expectation that independent developers will spend their own time investigating, documenting, reproducing, and reporting issues.
 
-Why?
+**Why?**
 
 Security research is work.
 
@@ -221,13 +207,10 @@ Technically, I don't have to respond.
 
 But when you're the person who knows the system, that's easier said than done.
 
-What if it's important?
-
-What if production is down?
-
-What if someone is blocked?
-
-What if it's a customer issue?
+- What if it's important?
+- What if production is down?
+- What if someone is blocked?
+- What if it's a customer issue?
 
 Most people don't ignore those messages.
 
@@ -243,7 +226,7 @@ The person receiving it often pays a much larger cost.
 
 Then again, maybe I'm overthinking it.
 
-It's entirely possible that after spending years debugging distributed systems, production incidents, and network issues, I've simply developed a professional allergy to the phrase:
+It's entirely possible that after spending years debugging apps, production incidents, and network issues, I've simply developed a professional allergy to the phrase:
 
 > "Quick question..."
 
@@ -253,7 +236,7 @@ Although I still maintain that if you're about to send me a direct message inste
 
 I don't really have an answer. Maybe that's just how it is.
 
-I just find it interesting.
+I just find it interesting and maybe I`m completely off base.
 
 Why do we often treat technical expertise differently from other professional skills?
 
@@ -267,4 +250,18 @@ Maybe that's just part of working in IT.
 
 Or maybe we've become so used to technology being everywhere that we've stopped seeing the expertise behind it.
 
-Either way, if you need me, I'll be busy ignoring a notification while simultaneously wondering if it's important.
+Either way, if you need me, I'll be busy ignoring a notification while simultaneously wondering if it's important and awaiting Skynet.
+
+And for those struggling with the pressure of always being available, always being the person who steps up and carries the responsibility.
+
+A psychologist once taught me an important lesson.
+
+We're not surgeons. We're not doctors.
+
+Nobody is going to die on our watch.
+
+So whenever the pressure starts building, or you're thinking about skipping lunch just to fix that issue first, remember:
+
+> Nobody is going to die.
+
+The bug will still be there after lunch.
