@@ -23,17 +23,25 @@ The turning point for me was when local-first workflows started taking a back se
 
 I understand why this direction appeals to teams and organizations. Shared workspaces, cloud synchronization, and collaboration features solve real problems. But my workflow is different.
 
-I switch between personal projects on my couch and client work during office hours. I want my API collections stored locally, versioned alongside my code, and committed to Git repositories where both I and my clients have full ownership and control.
+A lot of what I use Postman for isn't just sending requests. It's building API schema tests, request collections, and validation suites that are part of a project's deliverables.
 
-I don't want another cloud service sitting between me and my files.
+To me, those assets belong alongside the code they validate. If an API changes, I want the code, documentation, and tests to evolve together in the same repository and be versioned together.
 
-What I really want is simple:
+The cloud-first approach creates a problem for me, especially because I work on both personal projects and client projects.
 
-- Install the application
-- Open it
-- Run requests
+### Who actually owns those collections?
 
-That's it.
+If I'm working for a client, I believe the client should own the API tests and request collections just as much as they own the source code. Those assets shouldn't be tied to my personal account in a cloud service.
+
+What happens when I leave a project? What happens when another developer joins? What happens years later when the original team is gone?
+
+The project should own the tests, not the individual developer who happened to create them.
+
+That's why I prefer storing collections and tests in Git repositories alongside the code they validate. The repository becomes the source of truth, ownership is clear, onboarding is easier, and no one has to wonder which account contains the latest version.
+
+There's also the personal side of it. If I'm using the same account for both client work and private projects, where is the line between those worlds? Who owns the data for my personal projects if that account is connected to my employer? What happens if I change jobs?
+
+For me, local files stored in project repositories provide a much cleaner answer. API tests, request collections, and documentation are project assets. They should be versioned with the code, owned by the project, and remain independent of any individual developer's cloud account.
 
 Yes, I can still use Postman's CLI without an account, but that's not where I build and organize my collections. My workflow has always lived in the desktop client, and today that experience no longer aligns with how I prefer to work.
 
