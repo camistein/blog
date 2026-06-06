@@ -7,17 +7,15 @@ createdAt: 2026-06-07
 image: https://i.ibb.co/m5WcPsx1/it-vs-carpenter.png
 ---
 
----
-
 # The Cost of Being the Person Who Knows
 
 :::preamble
 I've worked in IT for a long time now.
+:::
 
 Long enough to notice a pattern.
 
 The more knowledge you have, the more responsibility seems to find its way to you.
-:::
 
 Sometimes that's part of the job.
 
