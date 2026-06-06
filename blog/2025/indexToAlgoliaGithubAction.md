@@ -10,8 +10,10 @@ createdAt: 2025-02-27
 
 # Index content to Algolia in Github Action
 
+:::preamble
 In this article I'll show you how to index data from markdown files to an Algolia index.
 The markdown files are in a separate repository and used as blog articles on my [website](https://camistein.dev/blog/) and I use Algolia to enable filtering of my articles by facets.
+:::
 
 We'll create an `index.js` file to call during a Github Action that will fetch and parse all markdown files in [this repository](https://github.com/camistein/blog).
 
@@ -51,7 +53,7 @@ async function getFiles() {
   for (const yearFolder of yearFolders) {
     const directoryContent = await fs.promises.readdir(
       `${folderPath}/${yearFolder}`,
-      { recursive: true, withFileTypes: true }
+      { recursive: true, withFileTypes: true },
     );
 
     for (const file of directoryContent) {
@@ -107,7 +109,7 @@ function parseMetadata(data) {
 
   const metaDataSection = new RegExp(
     /(---(.|\n|\r|\r\n|\/)*?(?=---))(---)/g,
-    "m"
+    "m",
   );
 
   const matchSection = data.trim().match(metaDataSection);
@@ -129,9 +131,9 @@ function parseMetadata(data) {
     for (const titleIndex in titles) {
       const titleRex = new RegExp(
         `(${titles[titleIndex]}:(.|\n|\r|\r\n|/|-)*?(?=(${titles.join(
-          ":|"
+          ":|",
         )}|---)))`,
-        "gm"
+        "gm",
       );
       const titleMatch = seoMeta.match(titleRex);
       if (titleMatch) {
@@ -223,7 +225,7 @@ Change the content of the if `if (file.isFile())` in the function `getFiles` to 
 if (file.isFile()) {
   const fileContent = await fs.readFileSync(
     `${file.parentPath}/${file.name}`,
-    "utf8"
+    "utf8",
   );
   if (fileContent) {
     files.push(parseFileData(file.name, `/blog/${yearFolder}`, fileContent));

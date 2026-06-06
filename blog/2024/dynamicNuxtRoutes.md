@@ -10,7 +10,9 @@ categories: Nuxt, Vue, TypeScript, Oktokit, Github
 
 # Dynamic Vue routes with Nuxt & Github
 
+:::preamble
 You can extend Nuxt routing and discovering of pages with your own custom implementation and even get pages from another Github repo completely. My blog entry routes are markdown files in another repository.
+:::
 
 > [!NOTE]  
 > If you only want basic discovering and rendering of markdown files in the same repo I recommend looking into [Nuxt Content](https://content.nuxt.com/).
@@ -101,7 +103,7 @@ const branchResult = await octokit.request(
     headers: {
       "X-GitHub-Api-Version": "2022-11-28",
     },
-  }
+  },
 );
 ```
 
@@ -118,7 +120,7 @@ if (branchResult && branchResult?.data?.commit?.sha) {
       headers: {
         "X-GitHub-Api-Version": "2022-11-28",
       },
-    }
+    },
   );
 }
 ```
@@ -153,7 +155,7 @@ I chose to do this so I didn't have to write filenames exactly like the slug but
 ```js
 const rootPath = dataContent.path.substring(
   0,
-  dataContent.path.lastIndexOf("/")
+  dataContent.path.lastIndexOf("/"),
 );
 const file = dataContent.path.substring(dataContent.path.lastIndexOf("/") + 1);
 const name = file.replace(/^.*[\\/]/, "").replace(".md", "");

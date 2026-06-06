@@ -10,7 +10,9 @@ image: https://i.ibb.co/YB5pB5Kw/github-cms.png
 
 # Using GitHub as a blog CMS in Next.js
 
+:::preamble
 Writing blog posts in a CMS felt overkill for what I actually needed — a place to dump notes and the occasional writeup. So instead, I keep my posts as markdown files in a separate GitHub repo and fetch them at runtime. No database, no CMS subscription, no redeploy needed when I publish something new.
+:::
 
 ## The structure
 

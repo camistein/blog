@@ -1,21 +1,34 @@
 ---
-title: Sanity Open AI image property
+title: Generating AI Images Directly in Sanity
 description: I will show you how to create an image property with the option to generate AI Images.
 image: https://i.ibb.co/ChX8C0R/AI-robot-Blog.png
 author: Camilla Nyberg
 category: blog
 categories: Sanity, React, Typescript, OpenAI
 createdAt: 2024-07-04
+updatedAt: 2026-06-06
 ---
 
-# Generate AI Images in Sanity image property
+# Generating AI Images Directly in Sanity
 
-Sometimes you might not have the energy or resources to create images.
+:::preamble
+Sometimes you just need an image so you can finish writing and publish your content. Opening another tool, generating an image, downloading it, and then uploading it back into your CMS quickly becomes tedious.
 
-And let's face it, not all of us are creative geniuses all the time and we just want to get on with publishing our content.
-In this post I will show you how to create an image property in Sanity with the option to generate & upload an AI Image instead.
+Since Sanity lets us replace and extend built-in field editors, we can bring that workflow directly into the Studio. In this tutorial we'll build a custom image field that works exactly like the default Sanity image input, but with an additional option to generate images using OpenAI and save them directly to your media library.
+:::
 
-With this property you'll be able to upload and choose an image just like the basic image property in Sanity, but editors can also choose to generate an OpenAI image and use it.
+The finished field behaves exactly like a normal Sanity image field, but editors also get the option to:
+
+- Generate images from a prompt
+- Preview the result before saving
+- Upload accepted images directly to Sanity Assets
+- Use generated images just like any other image reference
+
+We'll build the solution from three small pieces:
+
+- `AIGeneratedImage` for handling generated image data
+- `OpenAIGenerator` for wrapping the OpenAI SDK
+- `AIImageInput` for the custom Sanity UI
 
 > [!NOTE]
 > This is intended for [Sanity CMS](https://www.sanity.io/) so I will assume that you already have some basic experience and understanding of Sanity CMS, Documents and objects in this article.
@@ -59,7 +72,7 @@ So in your project root run one of the following commands to install it:
 - `npm install openai`
 - or `yarn add openai`
 
-## 4. Create the AIGeneratedImage class
+## Representing generated images
 
 We'll split the code into three files to keep things clean and easy to follow.
 
@@ -98,7 +111,7 @@ A few things worth noting here:
 - `crypto.randomUUID()` generates a proper UUID for unique filenames — built into all modern browsers, no custom code needed
 - `toBlob()` converts the base64 string to a `Blob` in one line using `Uint8Array.from`
 
-## 5. Create the OpenAIGenerator class
+## Wrapping the OpenAI SDK
 
 Next, create **OpenAIGenerator.ts**. This class wraps the OpenAI SDK and handles image generation.
 
@@ -151,7 +164,7 @@ export default OpenAIGenerator;
 > [!NOTE]
 > Unless you want to create your own backend API endpoint you'll need `dangerouslyAllowBrowser: true`. Your Sanity Studio will already be behind a login so this is fine.
 
-## 6. Create the custom input component
+## Building the custom image input
 
 Time to move on to the React component!
 
@@ -168,7 +181,7 @@ export const AIImageInput: ComponentType<
 };
 ```
 
-## 7. Imports
+## Adding the required imports
 
 We need imports for Sanity UI components, icons, the Sanity client, and our new helper classes.
 
@@ -208,7 +221,7 @@ Notice that we no longer import `OpenAI` directly or `unset` from Sanity — the
 
 Feel free to swap the icons for React Icons or anything else you prefer.
 
-## 8. Add Client and Toast
+## Accessing the Sanity client
 
 Add these lines to the start of your component to get the Sanity client and toast notifications:
 
@@ -220,7 +233,7 @@ const toast = useToast();
 > [!NOTE]
 > Always pass an `apiVersion` in `YYYY-MM-DD` format. Calling `useClient()` without one is deprecated.
 
-## 9. Add state and generate functionality
+## Generating images
 
 ![Sanity generate AI Image](https://i.ibb.co/RCyVJHt/Generate-AIImage.png)
 
@@ -295,7 +308,7 @@ To display the generated image:
 />
 ```
 
-## 10. Save image
+## Uploading images to Sanity
 
 ![Save generated AI Image](https://i.ibb.co/ChNZxjx/Generated-Image.png)
 
@@ -347,7 +360,7 @@ const clearAIImage = useCallback(() => {
 }, []);
 ```
 
-## 11. Create Sanity Field
+## Registering the field
 
 Now you can use your custom Sanity AI Image Input component for any image field.
 Here I've added it to a Sanity document:
@@ -661,6 +674,10 @@ export const AIImageInput: ComponentType<
   );
 };
 ```
+
+## Source code
+
+Want files to download instead? Take a look at the source code. Feel free to contribute with PRs.
 
 [Github repo](https://github.com/camistein/ai-image-field)
 

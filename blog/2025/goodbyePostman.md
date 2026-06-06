@@ -10,8 +10,10 @@ createdAt: 2025-11-23
 
 # Goodbye my old friend
 
+:::preamble
 It's been a good run. I don't know how many API requests I've made and I will always
 remember that I created my first API Schema tests in Postman.
+:::
 
 ## Why
 
