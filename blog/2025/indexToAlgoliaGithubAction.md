@@ -4,7 +4,7 @@ description: I will show you how you can index your markdown files into Algolia
 image: https://i.ibb.co/WNCyJgRX/indexing.jpg
 author: Camilla Nyberg
 category: blog
-categories: Algolia, Github
+categories: Algolia
 createdAt: 2025-02-27
 ---
 

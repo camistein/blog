@@ -4,7 +4,7 @@ description: I will show you how you can tie into the built in hooks to turn you
 image: https://i.ibb.co/FYt2LRb/og-camel.png
 author: Camilla Nyberg
 category: blog
-categories: Nuxt, Vue, TypeScript, Nuxt Content
+categories: Nuxt
 createdAt: 2024-05-20
 ---
 

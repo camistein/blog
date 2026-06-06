@@ -5,7 +5,7 @@ image: https://i.ibb.co/hMJ4yzG/og-cute-code-nuxt.png
 author: Camilla Nyberg
 createdAt: 2024-05-18
 category: blog
-categories: Nuxt, Vue, TypeScript, Oktokit, Github
+categories: Nuxt
 ---
 
 # Dynamic Vue routes with Nuxt & Github

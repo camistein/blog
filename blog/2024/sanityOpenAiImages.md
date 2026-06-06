@@ -4,7 +4,7 @@ description: I will show you how to create an image property with the option to 
 image: https://i.ibb.co/ChX8C0R/AI-robot-Blog.png
 author: Camilla Nyberg
 category: blog
-categories: Sanity, React, Typescript, OpenAI
+categories: Sanity, OpenAI
 createdAt: 2024-07-04
 updatedAt: 2026-06-06
 ---
