@@ -5,10 +5,8 @@ image: https://i.ibb.co/Tqps0dLY/goodbyepostman.png
 author: Camilla Nyberg
 category: blog
 categories: Postman
-createdAt: 2025-12-10
+createdAt: 2025-11-23
 ---
-
-![image](https://i.ibb.co/Tqps0dLY/goodbyepostman.png)
 
 # Goodbye my old friend
 
