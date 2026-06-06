@@ -2,7 +2,7 @@
 title: Using GitHub as a blog CMS in Next.js
 description: How I fetch markdown files from a separate GitHub repo as blog posts, with parallel fetching and built-in Next.js caching.
 author: Camilla Nyberg
-createdAt: 2025-12-10
+createdAt: 2025-11-23
 category: blog
 categories: GitHub, Next.js
 draft: false

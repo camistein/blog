@@ -5,7 +5,7 @@ image: https://i.ibb.co/Tqps0dLY/goodbyepostman.png
 author: Camilla Nyberg
 category: blog
 categories: Postman
-createdAt: 2025-11-23
+createdAt: 2025-12-17
 updatedAt: 2026-06-05
 ---
 
