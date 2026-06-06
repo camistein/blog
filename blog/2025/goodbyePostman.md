@@ -6,40 +6,71 @@ author: Camilla Nyberg
 category: blog
 categories: Postman
 createdAt: 2025-11-23
+updatedAt: 2026-06-05
 ---
 
-# Goodbye my old friend
+# Goodbye, My Old Friend
 
 :::preamble
-It's been a good run. I don't know how many API requests I've made and I will always
-remember that I created my first API Schema tests in Postman.
+It's been a good run. I have no idea how many API requests I've made over the years, but I'll always remember building my first API schema tests in Postman.
 :::
 
-## Why
+## Why I'm Leaving
 
-The app itself isn't discontinued or dead at all and I would say it's still a good app if
-it fits your purpose. But it no longer fits me.
+Postman isn't dead, discontinued, or even a bad product. In many situations, it's still a great tool. It just no longer fits the way I work.
 
-Ever since they moved on to force me to login to save my collections and not just have a minimal client, I felt that I needed to start looking for an alternative. Sure the save in cloud might be great for many organisations, but when I'm both coding on my couch after work and working with clients during work hours I want to work with them locally only and store them in my git repos. That gives me the control, where they are saved and my client having control and ownership.
+The turning point for me was when local-first workflows started taking a back seat to cloud-based collaboration. Having to sign in to manage collections and relying on cloud storage for what used to be a lightweight desktop experience made me start looking elsewhere.
 
-And let's face it, I want a fast and easy setup, install application and run my requests.
+I understand why this direction appeals to teams and organizations. Shared workspaces, cloud synchronization, and collaboration features solve real problems. But my workflow is different.
 
-Sure I can run collections without an account through the CLI but I always worked in Postman Client to create my collections and I'm now having to opt-out from using it due to data being stored in the cloud when I login.
+I switch between personal projects on my couch and client work during office hours. I want my API collections stored locally, versioned alongside my code, and committed to Git repositories where both I and my clients have full ownership and control.
 
-NOTE: I understand that companies need money and I wouldn't have had an issue with paying for a license to use the client. It's the forcing me to login and auto store on the cloud that gives me the ick.
+I don't want another cloud service sitting between me and my files.
+
+What I really want is simple:
+
+- Install the application
+- Open it
+- Run requests
+
+That's it.
+
+Yes, I can still use Postman's CLI without an account, but that's not where I build and organize my collections. My workflow has always lived in the desktop client, and today that experience no longer aligns with how I prefer to work.
+
+And to be clear: this isn't about money. I would happily pay for a license to use a local-first client. What doesn't sit right with me is being required to sign in and automatically push my work into the cloud.
+
+That's the part that gives me the ick.
 
 ## Alternative
 
 ### Bruno
 
-I work a lot in VSCode so I've found [Bruno](https://www.usebruno.com/) to be a good alternative for me since I can install the Bruno extension in VSCode. They also have a standalone client but the extension is right now good enough for me.
+Since I spend most of my day inside VS Code, I've found Bruno to be a natural replacement.
 
-They even have a Postman vs Bruno page on their website:
-[Bruno vs Postman](https://www.usebruno.com/compare/bruno-vs-postman)
+It offers both a standalone application and a VS Code extension, and for now the extension covers everything I need.
 
-And I got to admit, it makes me giggle a bit that the command to run tests are
-`bru run` . Everytime Im thinking `Bruh` in my head.
+One thing I particularly like is that collections are stored as plain files that can live directly inside your repository. No hidden storage, no proprietary format, and no mandatory cloud account.
+
+If you're curious, Bruno even has its own comparison page:
+
+https://www.usebruno.com/compare/bruno-vs-postman
+
+And I have to admit, the test command makes me smile every time:
+
+```bash
+bru run
+```
+
+Every single time my brain reads it as:
+
+> Bruh.
 
 ## Goodbye
 
-Goodbye my friend and teacher, we've had a good few years and some part of me still hopes that you listen to your dev community and stop forcing us to login and store on cloud.
+So goodbye, old friend.
+
+You've taught me a lot over the years and helped me learn API development, testing, and automation. For that, I'll always be grateful.
+
+Part of me still hopes you'll listen to the developers who miss the simpler days and bring back a truly local-first experience.
+
+Until then, it's time for me to move on.
