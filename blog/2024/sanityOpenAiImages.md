@@ -13,9 +13,9 @@ updatedAt: 2026-06-06
 
 :::preamble
 Sometimes you just need an image so you can finish writing and publish your content. Opening another tool, generating an image, downloading it, and then uploading it back into your CMS quickly becomes tedious.
+:::
 
 Since Sanity lets us replace and extend built-in field editors, we can bring that workflow directly into the Studio. In this tutorial we'll build a custom image field that works exactly like the default Sanity image input, but with an additional option to generate images using OpenAI and save them directly to your media library.
-:::
 
 The finished field behaves exactly like a normal Sanity image field, but editors also get the option to:
 
