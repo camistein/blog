@@ -53,15 +53,15 @@ And for those who don't enjoy writing unit tests, it's surprisingly good at gene
 
 ### You're still responsible for the code
 
-AI isn't perfect. At least not yet.
+One thing I learned fairly quickly is that working code isn't necessarily good code.
 
-Not because the code didn't work—it usually did—but because it often ignored the existing architecture or established patterns.
+The code Claude generated usually worked. The problem wasn't correctness—it was that it sometimes ignored the existing architecture or established patterns.
 
-For example, instead of creating a reusable <Dropdown /> component, Claude would sometimes implement the entire dropdown directly inside an existing component. The feature worked perfectly, but it increased the complexity and size of the component and reduced reusability.
+For example, instead of creating a reusable <Dropdown /> component, Claude would occasionally implement the entire dropdown directly inside an existing component. The feature behaved exactly as expected, but it also made the component larger, more complex, and less reusable.
 
-That's not a bug—it's an implementation choice. And it's exactly why I think AI-generated code still deserves a proper review.
+That's not a bug—it's a design decision. And it's exactly why I think AI-generated code still deserves a proper review.
 
-AI might generate great code, but do you actually understand it?
+AI can generate code that works, but do you actually understand it?
 
 If a bug is reported six months from now, you're the one who's going to debug it. If you don't understand the code you're committing today, you're making tomorrow's problem much harder to solve.
 
@@ -69,9 +69,7 @@ For me, that's another reason why code reviews still matter. Don't just review w
 
 ## What using Claude made me realise
 
-After a few weeks of using Claude Code, I noticed something interesting.
-
-I've found myself naturally switching between tools depending on what I'm trying to achieve.
+After a few weeks of using Claude Code, I noticed something interesting. I've found myself naturally switching between tools depending on what I'm trying to achieve.
 
 When I want to work directly in the codebase, troubleshoot or understand how a project fits together, Claude Code has been a great fit.
 
