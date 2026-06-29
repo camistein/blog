@@ -159,3 +159,19 @@ It's to ask a question.
 The best AI shouldn't always agree with you.
 
 It should ask the question you didn't think to ask.
+
+## Take it further
+
+If this resonates with you, I built a skill file that teaches Claude Code to behave the way I described — discussing before building, questioning decisions, flagging risks, and asking the question you didn't think to ask.
+
+You can download and install it here:
+
+[senior-software-engineer.skill](https://github.com/camistein/blog/raw/refs/heads/main/share/claude/skills/senior-software-engineer.skill)
+
+To install,
+
+1. Rename the file to .zip, extract it,
+2. Drop the folder into `~/.claude/skills/` or `C:\Users\[Your username]\.claude\skills`, depending on where your Claude Code root is.
+3. Restart Claude Code and it will pick it up automatically.
+
+It's a work in progress — and that's kind of the point. The best engineering partner grows with you.
