@@ -87,68 +87,23 @@ It's about the role I want AI to play while I'm developing.
 
 The biggest thing I've realised is that today's AI is reactive.
 
-**The problem is that it waits for me to ask.**
+If I ask it to compare authentication libraries, it does a great job. If I ask it to critique an architecture, it usually gives thoughtful feedback. If I ask whether there's an existing package instead of building something from scratch, it often suggests good alternatives.
 
-If I ask it to compare authentication libraries, it does a great job.
+The capability is already there. The problem is that AI waits for me to realise those are the conversations worth having.
 
-If I ask it to critique an architecture, it usually gives thoughtful feedback.
+Even when I deliberately asked Claude Code questions like _"Can we..."_, _"Why would we..."_ or _"How should we..."_, the conversation often drifted towards implementation. I could explicitly ask Claude to start by creating a plan, and it generally did a good job. But once that plan was approved and Claude started applying changes, future conversations naturally shifted back into implementation mode.
 
-If I ask it whether there's an existing package instead of building something from scratch, it often suggests good alternatives.
+That made me realise that sometimes I don't want another implementation. I want another perspective.
 
-So it already knows how to have those conversations but waits for me to realise they're worth having.
+Software engineering isn't just about writing code. It's choosing dependencies, comparing approaches, discussing architecture, and recognising trade-offs before they become technical debt. The best engineers don't just provide answers—they challenge assumptions, point out alternatives, and ask questions that help you think more clearly.
 
-Even when I deliberately asked Claude Code questions like _"Can we..."_, _"Why would we..."_ or _"How should we..."_, the conversation often drifted towards implementation.
-
-I could explicitly ask Claude to start by creating a plan, and it generally did a good job.
-
-But once I approved that plan and allowed Claude to automatically apply the plan, future conversations naturally shifted back into implementation mode.
-
-If I asked another architectural question later, I often found myself getting another implementation instead of another discussion and had to
-manually switch Claude Code back to plan mode.
-
-Sometimes I don't want another implementation.
-
-Sometimes I want a conversation.
-
-Sometimes I just want to rubber duck an idea before we write a single line of code.
-
-And sometimes I don't even realise I've reached an important decision point.
-
-That's when I'd like AI to ask,
-
-> "Should we talk about this before we implement it?"
-
-## The best AI shouldn't always agree with you
-
-Software engineering isn't just about writing code.
-
-It's choosing dependencies.
-
-It's comparing approaches.
-
-It's discussing architecture.
-
-It's recognising trade-offs before they become technical debt.
-
-Today's AI already knows how to help with those conversations.
-
-The knowledge is already there.
+That's the role I'd like AI to play.
 
 What's missing isn't capability—it's initiative.
 
-Instead of waiting for me to ask exactly the right question, I'd love AI to recognise when I'm exploring an idea instead of implementing one.
+Instead of waiting for me to ask exactly the right question, I'd love AI to recognise when I'm exploring an idea instead of implementing one. If I'm introducing a new dependency, suggest comparing alternatives. If I'm making an architectural decision, ask whether I'd like to explore a few approaches before we commit. If I'm asking _"Can..."_, _"Why..."_ or _"How..."_, recognise that I'm probably looking for a discussion rather than another implementation.
 
-If I'm introducing a new dependency, suggest comparing the alternatives.
-
-If I'm making an architectural decision, ask whether I'd like to explore a few approaches before we commit.
-
-If I'm asking _"Can..."_, _"Why..."_ or _"How..."_, recognise that I'm probably looking for a conversation rather than another implementation.
-
-Not because my first idea is wrong.
-
-Not because AI should interrupt every workflow.
-
-But because sometimes the most valuable thing an engineering partner can do isn't provide another answer.
+Not because my first idea is wrong, and not because AI should interrupt every workflow. But because sometimes the most valuable thing an engineering partner can do isn't provide another answer.
 
 It's to ask a question.
 
