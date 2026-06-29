@@ -9,7 +9,9 @@ image: https://i.ibb.co/4RYWSB2V/ai-shouldnt-always-agree-bg.png
 
 # The best AI shouldn't always agree with you
 
+:::preamble
 I recently started using Claude Code in VS Code after spending most of my time using AI through the browser.
+:::
 
 Like many developers, I was curious what working with an AI directly inside the editor would feel like. I expected to come away with opinions about the tool itself.
 
