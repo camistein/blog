@@ -95,13 +95,9 @@ If I ask it to critique an architecture, it usually gives thoughtful feedback.
 
 If I ask it whether there's an existing package instead of building something from scratch, it often suggests good alternatives.
 
-It already knows how to have those conversations.
+So it already knows how to have those conversations but waits for me to realise they're worth having.
 
-It just waits for me to realise they're worth having.
-
-I noticed this most while using Claude Code.
-
-Even when I deliberately asked questions like _"Can we..."_, _"Why would we..."_ or _"How should we..."_, the conversation often drifted towards implementation.
+Even when I deliberately asked Claude Code questions like _"Can we..."_, _"Why would we..."_ or _"How should we..."_, the conversation often drifted towards implementation.
 
 I could explicitly ask Claude to start by creating a plan, and it generally did a good job.
 
@@ -164,11 +160,11 @@ It should ask the question you didn't think to ask.
 
 If this resonates with you, I built a skill file that teaches Claude Code to behave the way I described — discussing before building, questioning decisions, flagging risks, and asking the question you didn't think to ask.
 
-You can download and install it here:
+**You can download it here**
 
-[senior-software-engineer.skill](https://github.com/camistein/blog/raw/refs/heads/main/share/claude/skills/senior-software-engineer.skill)
+> [senior-software-engineer.skill](https://github.com/camistein/blog/raw/refs/heads/main/share/claude/skills/senior-software-engineer.skill)
 
-To install,
+**To install**
 
 1. Rename the file to .zip, extract it,
 2. Drop the folder into `~/.claude/skills/` or `C:\Users\[Your username]\.claude\skills`, depending on where your Claude Code root is.
