@@ -117,10 +117,12 @@ If this resonates with you, I built a skill file that teaches Claude Code to beh
 
 [senior-software-engineer.skill](https://github.com/camistein/blog/raw/refs/heads/main/share/claude/skills/senior-software-engineer.skill)
 
+[senior-software-engineer.zip](https://github.com/camistein/blog/raw/refs/heads/main/share/claude/skills/senior-software-engineer.zip)
+
 **To install**
 
-1. Rename the file to .zip, extract it,
-2. Drop the folder into `~/.claude/skills/` or `C:\Users\[Your username]\.claude\skills`, depending on where your Claude Code root is.
+1. Rename the file to .zip if you downloaded .`skill` and not `.zip`
+2. Extract folder into `~/.claude/skills/` or `C:\Users\[Your username]\.claude\skills`, depending on where your Claude Code root is.
 3. Restart Claude Code and it will pick it up automatically.
 
 It's a work in progress — and that's kind of the point. The best engineering partner grows with you.
