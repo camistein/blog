@@ -115,7 +115,7 @@ If this resonates with you, I built a skill file that teaches Claude Code to beh
 
 **You can download it here**
 
-> [senior-software-engineer.skill](https://github.com/camistein/blog/raw/refs/heads/main/share/claude/skills/senior-software-engineer.skill)
+[senior-software-engineer.skill](https://github.com/camistein/blog/raw/refs/heads/main/share/claude/skills/senior-software-engineer.skill)
 
 **To install**
 
