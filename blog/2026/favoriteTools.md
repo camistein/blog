@@ -1,7 +1,7 @@
 ---
 title: Frontend Developer toolkit
 description: A roundup of my favorite frontend tools — Storybook, Vitest, Playwright, React Aria, Tailwind Variants, and Zustand.
-image: https://i.ibb.co/1YvznsWR/frontendtoolkit.png
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/frontendtoolkit.png
 author: Camilla Nyberg
 category: blog
 categories: tools

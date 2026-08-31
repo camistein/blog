@@ -1,7 +1,7 @@
 ---
 title: Dynamic routes with Nuxt
 description: My blog routes are imported from another github repo.
-image: https://i.ibb.co/hMJ4yzG/og-cute-code-nuxt.png
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/og-cute-code-nuxt.png
 author: Camilla Nyberg
 createdAt: 2024-05-18
 category: blog

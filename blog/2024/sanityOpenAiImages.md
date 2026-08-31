@@ -1,7 +1,7 @@
 ---
 title: Generating AI Images Directly in Sanity
 description: I will show you how to create an image property with the option to generate AI Images.
-image: https://i.ibb.co/ChX8C0R/AI-robot-Blog.png
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/ai-robot-blog.png
 author: Camilla Nyberg
 category: blog
 categories: Sanity, OpenAI
@@ -33,7 +33,7 @@ We'll build the solution from three small pieces:
 > [!NOTE]
 > This is intended for [Sanity CMS](https://www.sanity.io/) so I will assume that you already have some basic experience and understanding of Sanity CMS, Documents and objects in this article.
 
-![Sanity generate AI Image](https://i.ibb.co/RCyVJHt/Generate-AIImage.png)
+![Sanity generate AI Image](https://raw.githubusercontent.com/camistein/blog/main/blog/images/generate-ai-image.png)
 
 ## 1. Create an Open AI account
 
@@ -48,7 +48,7 @@ You'll need the following keys from your account:
 
 Save this in a notepad or similar for now.
 
-![OpenAI](https://i.ibb.co/4pqQQWV/OpenAI.png)
+![OpenAI](https://raw.githubusercontent.com/camistein/blog/main/blog/images/openai.png)
 
 ## 2. Add fields to .env
 
@@ -235,7 +235,7 @@ const toast = useToast();
 
 ## Generating images
 
-![Sanity generate AI Image](https://i.ibb.co/RCyVJHt/Generate-AIImage.png)
+![Sanity generate AI Image](https://raw.githubusercontent.com/camistein/blog/main/blog/images/generate-ai-image.png)
 
 ### State
 
@@ -310,7 +310,7 @@ To display the generated image:
 
 ## Uploading images to Sanity
 
-![Save generated AI Image](https://i.ibb.co/ChNZxjx/Generated-Image.png)
+![Save generated AI Image](https://raw.githubusercontent.com/camistein/blog/main/blog/images/generated-image.png)
 
 We won't automatically upload every image — not all AI images come out perfect and we don't want to use up unnecessary space. The editor confirms they're happy before we upload.
 

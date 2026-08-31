@@ -4,7 +4,7 @@ description: A thought on on-call work, bug reports, and why technical expertise
 author: Camilla Nyberg
 category: blog
 createdAt: 2026-06-07
-image: https://i.ibb.co/m5WcPsx1/it-vs-carpenter.png
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/it-vs-carpenter.png
 ---
 
 # The Cost of Being the Person Who Knows

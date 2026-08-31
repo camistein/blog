@@ -1,7 +1,7 @@
 ---
 title: Camel case to dash routes with Nuxt Content
 description: I will show you how you can tie into the built in hooks to turn your camel cased files into dashed slugs.
-image: https://i.ibb.co/FYt2LRb/og-camel.png
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/og-camel.png
 author: Camilla Nyberg
 category: blog
 categories: Nuxt

@@ -6,7 +6,7 @@ createdAt: 2025-11-23
 category: blog
 categories: GitHub, Next.js
 draft: false
-image: https://i.ibb.co/YB5pB5Kw/github-cms.png
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/github-cms.png
 ---
 
 # Using GitHub as a blog CMS in Next.js

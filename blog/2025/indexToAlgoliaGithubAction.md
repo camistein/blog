@@ -1,7 +1,7 @@
 ---
 title: Index content to Algolia in Github Action
 description: I will show you how you can index your markdown files into Algolia
-image: https://i.ibb.co/WNCyJgRX/indexing.jpg
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/indexing.jpg
 author: Camilla Nyberg
 category: blog
 categories: Algolia
@@ -83,7 +83,7 @@ We want to extract the meta section of the markdown and use this to index to Alg
 ---
 title: Index content to Algolia in Github Action
 description: I will show you how you can index your markdown files into Algolia
-image: https://i.ibb.co/WNCyJgRX/indexing.jpg
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/indexing.jpg
 author: Camilla Nyberg
 category: blog
 categories: Algolia, Github,
@@ -282,7 +282,7 @@ Add the following secrets to your Github repository secrets with the values from
 - ALGOLIAAPPKEY
 - ALGOLIAINDEX (name of your index)
 
-![Github secrets](https://i.ibb.co/X9TKCq5/Add-Secrets.png)
+![Github secrets](https://raw.githubusercontent.com/camistein/blog/main/blog/images/add-secrets.png)
 
 ### Create your Github Action workflow file
 
@@ -333,4 +333,4 @@ Now lets add the step to use our `index.js` file together with our Github reposi
 
 Now push and watch your Github Action run
 
-![Github Action](https://i.ibb.co/5WjxV2ML/Github-Action.png)
+![Github Action](https://raw.githubusercontent.com/camistein/blog/main/blog/images/github-action.png)

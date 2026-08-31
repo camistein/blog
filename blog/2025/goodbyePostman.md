@@ -1,7 +1,7 @@
 ---
 title: Goodbye postman
 description: It's been a good run but I've got to say goodbye to my friend Postman
-image: https://i.ibb.co/Tqps0dLY/goodbyepostman.png
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/goodbyepostman.png
 author: Camilla Nyberg
 category: blog
 categories: Postman
