@@ -1,0 +1,10 @@
+name: Notify portfolio of new post
+on:
+  push:
+    branches: [main]
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger revalidation
+        run: curl -fsS -X POST "https://camistein.dev/api/revalidate?secret=${{ secrets.REVALIDATE_SECRET }}"
