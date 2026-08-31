@@ -4,7 +4,7 @@ description: Thoughts on AI, software engineering, and why the best coding assis
 author: Camilla Nyberg
 category: blog
 createdAt: 2026-06-29
-image: https://i.ibb.co/4RYWSB2V/ai-shouldnt-always-agree-bg.png
+image: https://raw.githubusercontent.com/camistein/blog/main/blog/images/ai-shouldnt-always-agree-bg.png
 ---
 
 # The best AI shouldn't always agree with you
